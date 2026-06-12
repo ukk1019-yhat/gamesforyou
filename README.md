@@ -12,171 +12,99 @@
        ░       ░  ░       ░      ░  ░      ░                  ░ ░     ░       ░ ░         ░ ░     ░     
                                                                                 ░ ░                      
 ```
+🕹️ Games Foryou
 
-<h1>🕹️ GamesForYou</h1>
+A neon-styled retro arcade — 7 classic games, reimagined for the browser. No installs, no plugins, just play.
 
-### A retro arcade reborn in your browser — instantly play classic DOS-era games, no downloads, no setup, just nostalgia.
-
-[![Made with Love](https://img.shields.io/badge/Made%20with-%E2%9D%A4-red?style=for-the-badge)](https://github.com/ukk1019-yhat/gamesforyou)
-[![Powered by DOSBox](https://img.shields.io/badge/Powered%20by-DOSBox-1e90ff?style=for-the-badge)](https://www.dosbox.com/)
-[![Game Library](https://img.shields.io/badge/Library-1800%2B%20Titles-orange?style=for-the-badge)](.)
-[![License MIT](https://img.shields.io/badge/License-MIT-success?style=for-the-badge)](LICENSE)
-[![Open for PRs](https://img.shields.io/badge/PRs-Welcome-brightgreen?style=for-the-badge)](https://github.com/ukk1019-yhat/gamesforyou/pulls)
+Show Image
+Show Image
+Show Image
+Show Image
 
 </div>
 
----
+🎮 What is Games Foryou?
 
-## 🎬 What Is GamesForYou?
+Games Foryou is a single-page arcade hub built with pure HTML, CSS, and vanilla JavaScript. Each game lives in its own folder with its own engine — pick a card, jump straight in, and relive the classics with a sleek dark, neon-glow UI and an animated game-selection grid.
 
-GamesForYou is a **retro gaming time machine** — a curated, browser-playable archive of classic DOS games from the 90s and early 2000s. Whether you grew up dialing up the internet or you're discovering this era for the first time, GamesForYou brings these games back to life with zero friction.
 
-> 💡 **No installs. No emulators to configure. No floppy disks. Just click and play.**
+💡 No frameworks. No build step. Just open index.html and play.
 
----
 
-## ✨ Why GamesForYou Stands Out
 
-<table>
-<tr>
-<td width="50%" valign="top">
 
-### 🎯 Smart Discovery
-Instead of scrolling through an endless list, browse by **mood** — relaxing, nostalgic, fast-paced, or "so bad it's good." Discover hidden gems you never knew existed.
+🃏 The Lineup
 
-### 🌅 Game of the Day
-Every day, one title is spotlighted on the homepage with **fun trivia, history, and a "why it mattered"** writeup — turning browsing into a daily ritual.
+GameFolderDescription🟥 Bounce/bounceClassic Breakout-style brick basher🟢 Snake/snakeThe timeless grid-crawling classic🟦 Tetris/tetrisStack, clear, and chase the high score🚀 Defender/defenderSide-scrolling arcade shooter👻 Pac-Man/pacmanDodge ghosts, gobble pellets🧩 Puzzle/puzzleSliding tile puzzle challenge♠️ Spider Solitaire/spiderFull deck of card-based strategy
 
-### 🔖 Save & Resume
-Bookmark favorites and pick up right where you left off, powered by lightweight cloud-backed save states.
+Each game ships with its own source/, design/, audio/, and fonts/ assets — fully self-contained and easy to study, tweak, or extend.
 
-</td>
-<td width="50%" valign="top">
 
-### 🌐 Built for Everyone
-Touch-friendly controls mean these games are playable on **phones, tablets, and desktops** alike — no keyboard required.
+🚀 Getting Started
 
-### 🧭 Visual Library
-Cover art, screenshots, and short blurbs for every title make browsing feel like flipping through a retro game catalog, not a spreadsheet.
+No build tools, no dependencies — just static files.
 
-### 🏆 Achievements
-Earn badges for exploring genres, eras, and hidden classics — gamifying the act of rediscovery itself.
-
-</td>
-</tr>
-</table>
-
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-- Node.js (v18+)
-- Python 3
-
-### 1️⃣ Clone the Repository
-
-```bash
-git clone https://github.com/ukk1019-yhat/gamesforyou.git
+bashgit clone https://github.com/ukk1019-yhat/gamesforyou.git
 cd gamesforyou
-```
 
-### 2️⃣ Install Dependencies
+Then either:
 
-```bash
-npm install
-```
 
-### 3️⃣ Fetch the Game Data
+Open directly — double-click index.html to launch the arcade in your browser, or
+Serve locally (recommended, avoids audio/cache issues):
 
-```bash
-python download_data.py
-```
 
-> ⚠️ Running into download errors? Check the open Issues for known workarounds and fixes.
+bashpython3 -m http.server 8000
 
-### 4️⃣ Run It
+Visit http://localhost:8000 and pick a game 🎮
 
-```bash
-npm run dev
-```
 
-Visit **`http://localhost:3000`** and step into the arcade 🎮
+🗂️ Project Structure
 
----
+gamesforyou/
+├── index.html          # Arcade hub — game selection grid
+├── style.css           # Hub styling (neon/dark theme)
+├── utils/               # Shared helpers (AStar, Storage, Sounds, Queue...)
+├── bounce/
+├── snake/
+├── tetris/
+├── defender/
+├── pacman/
+├── puzzle/
+└── spider/
+    └── each contains: index.html, source/, design/, audio/, fonts/
 
-## 🗂️ Browse the Collection
 
-```
-╔═══════════════════════════════════════════════════╗
-║   🔍 Search     🏷️ Genre     📅 Era     🎲 Random   ║
-╠═══════════════════════════════════════════════════╣
-║   🐉  Wuxia & Adventure                            ║
-║   ⚔️   Action & Platformers                        ║
-║   🧩  Puzzle & Strategy                            ║
-║   🎲  RPG & Simulation                             ║
-║   🃏  Card & Board Games                           ║
-╚═══════════════════════════════════════════════════╝
-```
+🧱 Tech Stack
 
-Head to `/games` once running locally to explore the full catalog with filters and search.
+LayerTechnologyStructureHTML5StylingCustom CSS (dark, neon-glow theme, Orbitron/Rajdhani/Inter fonts)LogicVanilla JavaScript (per-game source modules)AudioHTML5 Audio (per-game sound effects)Shared utilsCustom A* pathfinding, storage, queue, and input helpers
 
----
 
-## 🧱 Tech Stack
+🤝 Contributing
 
-| Layer | Technology |
-|:------|:-----------|
-| Frontend | React + Next.js |
-| Styling | Tailwind CSS |
-| Emulation | Browser-based DOSBox |
-| Data | Python scripts for game metadata |
-| Storage | Save states & favorites |
+Contributions are welcome! Ways to help:
 
----
 
-## 🤝 Contributing
+🎮 Add a new game to the arcade grid
+🐛 Fix bugs in existing game logic
+🎨 Improve the hub UI/animations
+🔊 Improve audio or asset quality
+📱 Improve mobile/touch controls
 
-GamesForYou grows with the community. You can help by:
 
-- 🎮 Adding missing games or metadata
-- 🖼️ Contributing cover art or screenshots
-- 📝 Writing trivia/history blurbs for the "Game of the Day"
-- 🐛 Fixing bugs or improving performance
-- 🎨 Improving the UI/UX
-
-```bash
-# Fork, then:
-git checkout -b feature/your-feature-name
+bashgit checkout -b feature/your-feature-name
 git commit -m "Add: short description"
 git push origin feature/your-feature-name
-```
 
-Then open a Pull Request. See `CONTRIBUTING.md` for full details.
+Then open a Pull Request.
 
----
 
-## ⚖️ Copyright & Takedown Notice
+⚖️ License & Credits
 
-GamesForYou exists purely for **preservation, nostalgia, and educational purposes**. All games remain the property of their respective copyright holders.
+This project is for educational and entertainment purposes, reimplementing classic arcade game mechanics with original code and assets.
 
-If you are a rights holder and have concerns about any content in this repository, please open an issue or reach out, and the relevant files will be removed promptly.
-
----
-
-## 🙏 Acknowledgments
-
-This project stands on the shoulders of the retro-computing community:
-
-- [DOSBox](https://www.dosbox.com/) — the engine that keeps DOS alive
-- [em-dosbox](https://github.com/dreamlayers/em-dosbox) — Emscripten port of DOSBox
-- [Emularity](https://github.com/db48x/emularity) — emulator embedding toolkit
-- Everyone who's ever kept an old game alive by sharing it
-
----
 
 <div align="center">
-
-### ⭐ Enjoying the trip down memory lane? Star the repo and share it with someone who'll remember these games too!
+⭐ Like the arcade vibe? Star the repo and share it!
 
 </div>
