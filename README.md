@@ -11,60 +11,72 @@
  ░ ░   ░   ░   ▒   ░      ░      ░   ░  ░  ░      ░ ░   ░ ░ ░ ▒    ░░   ░      ▒ ▒ ░░  ░ ░ ░ ▒   ░░░ ░ ░ 
        ░       ░  ░       ░      ░  ░      ░                  ░ ░     ░       ░ ░         ░ ░     ░     
                                                                                 ░ ░                      
-```
-🕹️ Games Foryou
+<div align="center">
 
-A neon-styled retro arcade — 7 classic games, reimagined for the browser. No installs, no plugins, just play.
+# 🕹️ Games Foryou
 
-Show Image
-Show Image
-Show Image
-Show Image
+**A neon-styled retro arcade for your browser — 7 classic games, zero installs, zero plugins.**
+
+![HTML5](https://img.shields.io/badge/Built%20with-HTML5%20%26%20JS-ffd43b?style=for-the-badge)
+![Games](https://img.shields.io/badge/Games-7%20Classics-ff6b6b?style=for-the-badge)
+![License](https://img.shields.io/badge/License-MIT-4dabf7?style=for-the-badge)
+![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-51cf66?style=for-the-badge)
 
 </div>
 
-🎮 What is Games Foryou?
+---
 
-Games Foryou is a single-page arcade hub built with pure HTML, CSS, and vanilla JavaScript. Each game lives in its own folder with its own engine — pick a card, jump straight in, and relive the classics with a sleek dark, neon-glow UI and an animated game-selection grid.
+## 🎮 Overview
 
+**Games Foryou** is a single-page arcade hub built with plain HTML, CSS, and vanilla JavaScript — no frameworks, no bundlers, no build step. Open `index.html` and a neon, dark-themed grid of game cards greets you. Pick one, and you're playing instantly.
 
-💡 No frameworks. No build step. Just open index.html and play.
+Each game is self-contained, with its own engine, assets, and styling — making the codebase easy to read, fork, or extend with a new title.
 
+---
 
+## 🃏 Game Lineup
 
+| Game | Folder | Description |
+|---|---|---|
+| 🟥 Bounce | `/bounce` | Breakout-style brick basher |
+| 🟢 Snake | `/snake` | The classic grid-crawling game |
+| 🟦 Tetris | `/tetris` | Stack blocks, clear lines, chase the high score |
+| 🚀 Defender | `/defender` | Side-scrolling arcade shooter |
+| 👻 Pac-Man | `/pacman` | Dodge ghosts, eat pellets |
+| 🧩 Puzzle | `/puzzle` | Sliding tile puzzle |
+| ♠️ Spider Solitaire | `/spider` | Full-deck card strategy |
 
-🃏 The Lineup
+Every game folder contains its own `index.html`, `source/`, `design/`, `audio/`, and `fonts/`.
 
-GameFolderDescription🟥 Bounce/bounceClassic Breakout-style brick basher🟢 Snake/snakeThe timeless grid-crawling classic🟦 Tetris/tetrisStack, clear, and chase the high score🚀 Defender/defenderSide-scrolling arcade shooter👻 Pac-Man/pacmanDodge ghosts, gobble pellets🧩 Puzzle/puzzleSliding tile puzzle challenge♠️ Spider Solitaire/spiderFull deck of card-based strategy
+---
 
-Each game ships with its own source/, design/, audio/, and fonts/ assets — fully self-contained and easy to study, tweak, or extend.
+## 🚀 Getting Started
 
-
-🚀 Getting Started
-
-No build tools, no dependencies — just static files.
-
-bashgit clone https://github.com/ukk1019-yhat/gamesforyou.git
+```bash
+git clone https://github.com/ukk1019-yhat/gamesforyou.git
 cd gamesforyou
+```
 
-Then either:
+**Option 1 — Open directly**
+Double-click `index.html` to launch the arcade in your browser.
 
+**Option 2 — Serve locally** (recommended, avoids audio/caching issues)
 
-Open directly — double-click index.html to launch the arcade in your browser, or
-Serve locally (recommended, avoids audio/cache issues):
+```bash
+python3 -m http.server 8000
+```
 
+Then visit `http://localhost:8000`.
 
-bashpython3 -m http.server 8000
+---
 
-Visit http://localhost:8000 and pick a game 🎮
+## 🗂️ Project Structure
 
-
-🗂️ Project Structure
-
+```
 gamesforyou/
-├── index.html          # Arcade hub — game selection grid
-├── style.css           # Hub styling (neon/dark theme)
-├── utils/               # Shared helpers (AStar, Storage, Sounds, Queue...)
+├── index.html        # Arcade hub — game selection grid
+├── style.css         # Hub styling (dark, neon theme)
+├── utils/             # Shared helpers (AStar, Storage, Sounds, Queue, etc.)
 ├── bounce/
 ├── snake/
 ├── tetris/
@@ -72,36 +84,53 @@ gamesforyou/
 ├── pacman/
 ├── puzzle/
 └── spider/
-    └── each contains: index.html, source/, design/, audio/, fonts/
+```
 
+Each game folder follows the same pattern: `index.html`, `source/`, `design/`, `audio/`, `fonts/`.
 
-🧱 Tech Stack
+---
 
-LayerTechnologyStructureHTML5StylingCustom CSS (dark, neon-glow theme, Orbitron/Rajdhani/Inter fonts)LogicVanilla JavaScript (per-game source modules)AudioHTML5 Audio (per-game sound effects)Shared utilsCustom A* pathfinding, storage, queue, and input helpers
+## 🧱 Tech Stack
 
+- **Structure:** HTML5
+- **Styling:** Custom CSS — dark, neon-glow theme with Orbitron, Rajdhani, and Inter fonts
+- **Logic:** Vanilla JavaScript, modular per game
+- **Audio:** HTML5 Audio elements
+- **Shared utilities:** Custom A* pathfinding, local storage, queue, and input handling
 
-🤝 Contributing
+---
 
-Contributions are welcome! Ways to help:
+## 🤝 Contributing
 
+Contributions are welcome:
 
-🎮 Add a new game to the arcade grid
-🐛 Fix bugs in existing game logic
-🎨 Improve the hub UI/animations
-🔊 Improve audio or asset quality
-📱 Improve mobile/touch controls
+- 🎮 Add a new game to the arcade
+- 🐛 Fix bugs in existing game logic
+- 🎨 Improve the hub's UI and animations
+- 🔊 Improve or add audio/assets
+- 📱 Improve mobile and touch controls
 
-
-bashgit checkout -b feature/your-feature-name
+```bash
+git checkout -b feature/your-feature-name
 git commit -m "Add: short description"
 git push origin feature/your-feature-name
+```
 
 Then open a Pull Request.
 
+---
 
-⚖️ License & Credits
+## ⚖️ License
 
-This project is for educational and entertainment purposes, reimplementing classic arcade game mechanics with original code and assets.
+This project is for educational and entertainment purposes — classic arcade mechanics reimplemented with original code and assets.
+
+---
+
+<div align="center">
+
+⭐ **If you enjoy the arcade, star the repo!**
+
+</div>
 
 
 <div align="center">
