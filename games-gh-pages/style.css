@@ -1,147 +1,453 @@
-/**
- * Main Styles
- */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 html {
-    background: radial-gradient(black 15%, transparent 16%) 0 0,
-                radial-gradient(black 15%, transparent 16%) 8px 8px,
-                radial-gradient(rgba(255, 255, 255, 0.1) 15%, transparent 20%) 0 1px,
-                radial-gradient(rgba(255, 255, 255, 0.1) 15%, transparent 20%) 8px 9px;
-    background-color: #282828;
-    background-size: 16px 16px;
     height: 100%;
 }
 
 body {
+    min-height: 100%;
+    font-family: "Inter", "Segoe UI", sans-serif;
+    background: #0a0a0f;
+    color: #e0e0e0;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
     position: relative;
-    height: 100%;
-    margin: 0px;
-    font: 12px/18px "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    background-image: radial-gradient(50% 50%, transparent, black);
 }
 
+.bg-effects {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background:
+        radial-gradient(ellipse at 20% 50%, rgba(120, 80, 255, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 20%, rgba(255, 100, 100, 0.06) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 80%, rgba(0, 200, 255, 0.06) 0%, transparent 50%);
+    pointer-events: none;
+}
 
-
-/**
- * Design Styles
- */
 header {
-    position: absolute;
-    box-sizing: border-box;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 34px;
-    margin: 0;
-    z-index: 1;
-    box-shadow: 0 5px rgba(0, 0, 0, 0.8);
-    background: rgba(20, 20, 20, 0.8);
-    border-left: 8px solid #900;
-    transition: all 0.5s;
-}
-header:hover {
-    height: 80px;
-}
-
-iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
-    margin-bottom: -5px;
-}
-
-
-
-/**
- * Header Styles
- */
-header h1 {
-    display: inline-block;
-    margin: 0;
-    padding: 8px;
-    font-family: Georgia, Times, "Times New Roman", serif;
-    color: white;
-    font-size: 18px;
-    font-weight: normal;
-    text-transform: capitalize;
-}
-header p {
-    display: inline-block;
-    margin: 0;
-    color: #999;
-    font-size: 1em;
-    font-style: italic;
-    transition: opacity 0.5s;
-}
-#select {
     position: relative;
-    left: -115px;
-    opacity: 0;
+    z-index: 10;
+    background: rgba(16, 16, 24, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 16px 32px;
 }
 
-header:hover #expand {
-    opacity: 0;
-}
-header:hover #select {
-    opacity: 1;
+.header-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
-
-
-/**
- * Nav Menu Styles
- */
-#nav {
-    list-style: none;
-    margin: 5px;
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
-#nav li {
-    display: inline-block;
+
+.logo-icon {
+    font-size: 28px;
+    color: #ffd43b;
+    text-shadow: 0 0 20px rgba(255, 212, 59, 0.4);
+    animation: spin 8s linear infinite;
 }
-#nav a {
-    position: relative;
-    margin: 2px 3px;
-    padding: 6px 12px 5px;
-    font-family: Georgia, Times, "Times New Roman", serif;
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.logo h1 {
+    font-family: "Orbitron", monospace;
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: 3px;
     text-transform: uppercase;
-    text-decoration: none;
-    font-weight: 800;
-    font-size: 10px;
+    background: linear-gradient(135deg, #ffd43b, #ff6b6b, #4dabf7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.tagline {
+    font-family: "Rajdhani", sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: rgba(255, 255, 255, 0.4);
+    text-transform: uppercase;
+}
+
+main {
+    position: relative;
+    z-index: 1;
+    flex: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 32px 80px;
+    width: 100%;
+}
+
+.hero {
+    text-align: center;
+    margin-bottom: 50px;
+    padding: 20px 0;
+}
+
+.hero h2 {
+    font-family: "Orbitron", monospace;
+    font-size: 42px;
+    font-weight: 900;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    background: linear-gradient(135deg, #ffffff 0%, #a277ff 50%, #ff6b6b 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 12px;
+}
+
+.hero p {
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: 300;
     letter-spacing: 1px;
-    line-height: 18px;
-    color: #BBB;
+}
+
+.game-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 24px;
+    margin-bottom: 40px;
+}
+
+.game-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px 24px 24px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    overflow: hidden;
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.35s ease, border-color 0.35s ease;
+    isolation: isolate;
+}
+
+.game-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    border-color: var(--accent);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px color-mix(in srgb, var(--accent) 20%, transparent);
+}
+
+@supports not (color: color-mix(in srgb, red, blue)) {
+    .game-card:hover {
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px var(--accent);
+    }
+}
+
+.game-card:active {
+    transform: translateY(-2px) scale(1.01);
+}
+
+.card-bg {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 0%, var(--accent), transparent 70%);
     opacity: 0;
-    transition: opacity 0.5s;
+    transition: opacity 0.4s ease;
+    z-index: 0;
 }
-header:hover #nav a {
+
+.game-card:hover .card-bg,
+.game-card.active .card-bg {
+    opacity: 0.08;
+}
+
+.card-icon {
+    position: relative;
+    z-index: 1;
+    width: 72px;
+    height: 72px;
+    margin-bottom: 16px;
+    color: var(--accent);
+    filter: drop-shadow(0 0 12px color-mix(in srgb, var(--accent) 40%, transparent));
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.4s ease;
+}
+
+@supports not (color: color-mix(in srgb, red, blue)) {
+    .card-icon {
+        filter: drop-shadow(0 0 12px var(--accent));
+    }
+}
+
+.game-card:hover .card-icon {
+    transform: scale(1.15) rotate(-5deg);
+    filter: drop-shadow(0 0 30px color-mix(in srgb, var(--accent) 50%, transparent));
+}
+
+@supports not (color: color-mix(in srgb, red, blue)) {
+    .game-card:hover .card-icon {
+        filter: drop-shadow(0 0 30px var(--accent));
+    }
+}
+
+.card-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    width: 100%;
+}
+
+.card-content h3 {
+    font-family: "Rajdhani", sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #fff;
+    margin-bottom: 4px;
+}
+
+.card-count {
+    font-family: "Orbitron", monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: rgba(255, 255, 255, 0.25);
+    text-transform: uppercase;
+}
+
+.card-glow {
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 3px;
+    border-radius: 3px;
+    background: var(--accent);
+    opacity: 0;
+    transition: opacity 0.35s ease, width 0.35s ease;
+}
+
+.game-card:hover .card-glow,
+.game-card.active .card-glow {
     opacity: 1;
-}
-#nav a:hover {
-    color: white;
+    width: 80%;
 }
 
-#nav a::after {
-    content: "//";
-    position: absolute;
-    top: 1px;
-    right: -8px;
-    width: 10px;
-    height: 20px;
-    font-size: 18px;
-    letter-spacing: -4px;
-    color: #646464;
-}
-#nav li:first-child a::before {
-    content: "//";
-    position: absolute;
-    top: 1px;
-    left: -8px;
-    width: 10px;
-    height: 20px;
-    font-size: 18px;
-    letter-spacing: -4px;
-    color: #646464;
+.game-card.active {
+    border-color: var(--accent);
+    transform: translateY(-4px);
+    box-shadow: 0 0 30px color-mix(in srgb, var(--accent) 25%, transparent);
 }
 
-#nav li a.selected {
-    color: white;
+@supports not (color: color-mix(in srgb, red, blue)) {
+    .game-card.active {
+        box-shadow: 0 0 30px var(--accent);
+    }
+}
+
+.game-frame-container {
+    display: none;
+    flex-direction: column;
+    border-radius: 16px;
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+    animation: frameEnter 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    margin-top: 10px;
+}
+
+.game-frame-container.open {
+    display: flex;
+}
+
+@keyframes frameEnter {
+    0% {
+        opacity: 0;
+        transform: translateY(30px) scale(0.96);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.frame-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px;
+    background: rgba(255, 255, 255, 0.04);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.frame-title {
+    font-family: "Rajdhani", sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.close-frame {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 24px;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    transition: background 0.2s, color 0.2s;
+    line-height: 1;
+}
+
+.close-frame:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+#machine {
+    width: 100%;
+    height: 75vh;
+    border: none;
+    background: #000;
+}
+
+footer {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    padding: 24px 32px;
+    background: rgba(16, 16, 24, 0.6);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+footer p {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.35);
+    letter-spacing: 1px;
+}
+
+footer a {
+    color: rgba(162, 119, 255, 0.8);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
+}
+
+footer a:hover {
+    color: #a277ff;
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    header {
+        padding: 12px 16px;
+    }
+
+    .header-inner {
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .logo h1 {
+        font-size: 17px;
+        letter-spacing: 2px;
+    }
+
+    .tagline {
+        font-size: 12px;
+    }
+
+    main {
+        padding: 24px 16px 60px;
+    }
+
+    .hero h2 {
+        font-size: 28px;
+        letter-spacing: 2px;
+    }
+
+    .hero p {
+        font-size: 15px;
+    }
+
+    .game-grid {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 14px;
+    }
+
+    .game-card {
+        padding: 20px 14px 16px;
+    }
+
+    .card-icon {
+        width: 52px;
+        height: 52px;
+        margin-bottom: 10px;
+    }
+
+    .card-content h3 {
+        font-size: 17px;
+    }
+
+    #machine {
+        height: 55vh;
+    }
+}
+
+@media (max-width: 480px) {
+    .game-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .game-card {
+        padding: 14px 10px 12px;
+        border-radius: 12px;
+    }
+
+    .card-icon {
+        width: 40px;
+        height: 40px;
+        margin-bottom: 8px;
+    }
+
+    .card-content h3 {
+        font-size: 14px;
+        letter-spacing: 1px;
+    }
+
+    .card-count {
+        font-size: 9px;
+    }
+
+    .hero h2 {
+        font-size: 22px;
+    }
 }
