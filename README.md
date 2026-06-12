@@ -1,9 +1,0 @@
-# ukkgames
-
-A collection of classic arcade games reimagined in JavaScript, HTML and CSS.
-
-All project files are inside the `ukkgames/` directory.
-
-## Credits
-
-Designed and Developed by [Umakrishnakanth](https://github.com/ukk1019-yhat)
