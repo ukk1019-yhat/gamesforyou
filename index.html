@@ -113,7 +113,12 @@
         <div class="game-frame-container" id="gameFrameContainer">
             <div class="frame-header">
                 <span class="frame-title" id="gameTitle">Bounce</span>
-                <button class="close-frame" id="closeFrame" aria-label="Close game">&times;</button>
+                <div class="frame-actions">
+                    <button class="frame-btn" id="fullscreenBtn" aria-label="Fullscreen" title="Fullscreen">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+                    </button>
+                    <button class="frame-btn close-frame" id="closeFrame" aria-label="Close game">&times;</button>
+                </div>
             </div>
             <div class="frame-body">
                 <div class="frame-spinner" id="frameSpinner">
@@ -203,6 +208,27 @@
             });
 
             document.getElementById("closeFrame").addEventListener("click", closeGame);
+
+            document.getElementById("fullscreenBtn").addEventListener("click", () => {
+                const el = document.getElementById("gameFrameContainer");
+                if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+                    if (el.requestFullscreen) el.requestFullscreen();
+                    else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+                } else {
+                    if (document.exitFullscreen) document.exitFullscreen();
+                    else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+                }
+            });
+
+            function updateFSIcon() {
+                const isFS = !!(document.fullscreenElement || document.webkitFullscreenElement);
+                const btn = document.getElementById("fullscreenBtn");
+                btn.innerHTML = isFS
+                    ? '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/></svg>'
+                    : '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>';
+            }
+            document.addEventListener("fullscreenchange", updateFSIcon);
+            document.addEventListener("webkitfullscreenchange", updateFSIcon);
 
             document.addEventListener("keydown", (e) => {
                 if (e.key === "Escape") closeGame();
