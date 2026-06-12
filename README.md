@@ -11,7 +11,7 @@
  ░ ░   ░   ░   ▒   ░      ░      ░   ░  ░  ░      ░ ░   ░ ░ ░ ▒    ░░   ░      ▒ ▒ ░░  ░ ░ ░ ▒   ░░░ ░ ░ 
        ░       ░  ░       ░      ░  ░      ░                  ░ ░     ░       ░ ░         ░ ░     ░     
                                                                                 ░ ░                      
-<div align="center">
+```
 
 # 🕹️ Games Foryou
 
@@ -128,12 +128,6 @@ This project is for educational and entertainment purposes — classic arcade me
 
 <div align="center">
 
-⭐ **If you enjoy the arcade, star the repo!**
-
-</div>
-
-
-<div align="center">
-⭐ Like the arcade vibe? Star the repo and share it!
+⭐ **If you enjoy the arcade, star the repo and share it!**
 
 </div>
