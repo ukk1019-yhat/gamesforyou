@@ -4,12 +4,15 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Games Foryou</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect x='12' y='30' width='76' height='46' rx='12' fill='%230a0a0f' stroke='%23ffd43b' stroke-width='4'/%3E%3Ccircle cx='32' cy='53' r='10' fill='none' stroke='%23ff6b6b' stroke-width='3'/%3E%3Ccircle cx='68' cy='53' r='10' fill='none' stroke='%234dabf7' stroke-width='3'/%3E%3Cpath d='M44 53 L56 53' stroke='%23ffd43b' stroke-width='3' stroke-linecap='round'/%3E%3Crect x='22' y='76' width='6' height='10' rx='2' fill='%234dabf7'/%3E%3Crect x='42' y='76' width='6' height='10' rx='2' fill='%23ff6b6b'/%3E%3Crect x='52' y='76' width='6' height='10' rx='2' fill='%23ff6b6b'/%3E%3Crect x='72' y='76' width='6' height='10' rx='2' fill='%234dabf7'/%3E%3C/svg%3E" />
+    <link rel="alternate icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect x='12' y='30' width='76' height='46' rx='12' fill='%230a0a0f' stroke='%23ffd43b' stroke-width='4'/%3E%3Ccircle cx='32' cy='53' r='10' fill='none' stroke='%23ff6b6b' stroke-width='3'/%3E%3Ccircle cx='68' cy='53' r='10' fill='none' stroke='%234dabf7' stroke-width='3'/%3E%3Cpath d='M44 53 L56 53' stroke='%23ffd43b' stroke-width='3' stroke-linecap='round'/%3E%3Crect x='22' y='76' width='6' height='10' rx='2' fill='%234dabf7'/%3E%3Crect x='42' y='76' width='6' height='10' rx='2' fill='%23ff6b6b'/%3E%3Crect x='52' y='76' width='6' height='10' rx='2' fill='%23ff6b6b'/%3E%3Crect x='72' y='76' width='6' height='10' rx='2' fill='%234dabf7'/%3E%3C/svg%3E" />
     <link rel="stylesheet" href="style.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;600;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet" />
 </head>
 <body>
     <div class="bg-effects"></div>
+    <div class="noise-overlay"></div>
 
     <header>
         <div class="header-inner">
@@ -23,8 +26,8 @@
 
     <main>
         <div class="hero">
-            <h2>Choose Your Game</h2>
-            <p>Rediscover timeless classics reimagined for modern play.</p>
+            <h2 class="hero-title">Choose Your Game</h2>
+            <p class="hero-sub">Rediscover timeless classics reimagined for modern play.</p>
         </div>
 
         <div class="game-grid" id="gameGrid">
@@ -35,7 +38,7 @@
                 </div>
                 <div class="card-content">
                     <h3>Bounce</h3>
-                    <span class="card-count">1</span>
+                    <span class="card-count">Breakout</span>
                 </div>
                 <div class="card-glow"></div>
             </a>
@@ -46,7 +49,7 @@
                 </div>
                 <div class="card-content">
                     <h3>Snake</h3>
-                    <span class="card-count">2</span>
+                    <span class="card-count">Classic</span>
                 </div>
                 <div class="card-glow"></div>
             </a>
@@ -57,7 +60,7 @@
                 </div>
                 <div class="card-content">
                     <h3>Tetris</h3>
-                    <span class="card-count">3</span>
+                    <span class="card-count">Puzzle</span>
                 </div>
                 <div class="card-glow"></div>
             </a>
@@ -68,7 +71,7 @@
                 </div>
                 <div class="card-content">
                     <h3>Defender</h3>
-                    <span class="card-count">4</span>
+                    <span class="card-count">Tower</span>
                 </div>
                 <div class="card-glow"></div>
             </a>
@@ -79,7 +82,7 @@
                 </div>
                 <div class="card-content">
                     <h3>Pacman</h3>
-                    <span class="card-count">5</span>
+                    <span class="card-count">Arcade</span>
                 </div>
                 <div class="card-glow"></div>
             </a>
@@ -90,7 +93,7 @@
                 </div>
                 <div class="card-content">
                     <h3>Puzzle</h3>
-                    <span class="card-count">6</span>
+                    <span class="card-count">Jigsaw</span>
                 </div>
                 <div class="card-glow"></div>
             </a>
@@ -101,7 +104,7 @@
                 </div>
                 <div class="card-content">
                     <h3>Spider</h3>
-                    <span class="card-count">7</span>
+                    <span class="card-count">Solitaire</span>
                 </div>
                 <div class="card-glow"></div>
             </a>
@@ -110,9 +113,15 @@
         <div class="game-frame-container" id="gameFrameContainer">
             <div class="frame-header">
                 <span class="frame-title" id="gameTitle">Bounce</span>
-                <button class="close-frame" id="closeFrame">&times;</button>
+                <button class="close-frame" id="closeFrame" aria-label="Close game">&times;</button>
             </div>
-            <iframe id="machine" title="Game Frame"></iframe>
+            <div class="frame-body">
+                <div class="frame-spinner" id="frameSpinner">
+                    <div class="spinner-ring"></div>
+                    <span class="spinner-text">Loading game...</span>
+                </div>
+                <iframe id="machine" title="Game Frame" name="game-frame"></iframe>
+            </div>
         </div>
     </main>
 
@@ -121,10 +130,15 @@
     </footer>
 
     <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            document.body.classList.add("page-loaded");
+        });
+
         function play(game) {
             const container = document.getElementById("gameFrameContainer");
             const iframe = document.getElementById("machine");
             const title = document.getElementById("gameTitle");
+            const spinner = document.getElementById("frameSpinner");
             const cards = document.querySelectorAll(".game-card");
             const hero = document.querySelector(".hero");
 
@@ -133,10 +147,14 @@
             if (activeCard) activeCard.classList.add("active");
 
             title.textContent = game.charAt(0).toUpperCase() + game.slice(1);
+            spinner.classList.add("visible");
+            iframe.classList.remove("loaded");
             iframe.src = game + "/index.html";
             container.classList.add("open");
+            hero.classList.add("hero-hidden");
             hero.style.display = "none";
             document.title = "Games Foryou - " + game.charAt(0).toUpperCase() + game.slice(1);
+            document.documentElement.scrollTop = container.offsetTop - 80;
         }
 
         function closeGame() {
@@ -144,14 +162,22 @@
             const hero = document.querySelector(".hero");
             const cards = document.querySelectorAll(".game-card");
             container.classList.remove("open");
+            hero.classList.remove("hero-hidden");
             hero.style.display = "";
             cards.forEach(c => c.classList.remove("active"));
             document.getElementById("gameTitle").textContent = "";
+            document.getElementById("frameSpinner").classList.remove("visible");
             document.getElementById("machine").src = "";
+            document.getElementById("machine").classList.remove("loaded");
             document.title = "Games Foryou";
         }
 
-        window.addEventListener("load", () => {
+        document.getElementById("machine").addEventListener("load", () => {
+            document.getElementById("frameSpinner").classList.remove("visible");
+            document.getElementById("machine").classList.add("loaded");
+        });
+
+        window.addEventListener("DOMContentLoaded", () => {
             const hash = location.hash.substring(1);
             if (hash) {
                 play(hash);
@@ -175,6 +201,22 @@
                 } else {
                     closeGame();
                 }
+            });
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry, i) => {
+                    if (entry.isIntersecting) {
+                        setTimeout(() => {
+                            entry.target.classList.add("card-visible");
+                        }, entry.target.dataset.index * 80);
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.15, rootMargin: "0px 0px -40px 0px" });
+
+            document.querySelectorAll(".game-card").forEach((card, i) => {
+                card.dataset.index = i;
+                observer.observe(card);
             });
         });
     </script>
