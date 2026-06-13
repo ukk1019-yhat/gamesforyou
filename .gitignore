@@ -3,3 +3,8 @@
 runner.json
 jsconfig.json
 .vercel
+.backup/
+node_modules/
+build.mjs
+package.json
+package-lock.json

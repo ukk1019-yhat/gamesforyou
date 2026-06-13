@@ -1,0 +1,11 @@
+User-agent: *
+Disallow: /bounce/
+Disallow: /snake/
+Disallow: /tetris/
+Disallow: /defender/
+Disallow: /pacman/
+Disallow: /puzzle/
+Disallow: /spider/
+Disallow: /utils/
+
+Sitemap: https://games-gh-pages.vercel.app/sitemap.xml

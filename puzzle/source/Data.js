@@ -1,21 +1,2 @@
-export default {
-
-    // Puzzle Categories
-    categories : [
-        "Art",
-        "Apple",
-        "Animal",
-        "Car",
-        "City",
-        "Gradient",
-        "Street",
-        "Wonder",
-    ],
-
-    // Puzzles por Categories
-    puzzles : 10,
-
-    // Pieces por Puzzle
-    pieces : [ "50", "100", "250", "500" ],
-
-};
+/* Games Foryou - © 2026 Designed and Developed by Umakrishnakanth (https://github.com/ukk1019-yhat). All rights reserved. Unauthorized copying, modification, or distribution prohibited. */
+export default{categories:["Art","Apple","Animal","Car","City","Gradient","Street","Wonder"],puzzles:10,pieces:["50","100","250","500"]};
