@@ -13,8 +13,10 @@ export default class Bricks {
 
     /**
      * Bounce Bricks constructor
+     * @param {Effects} effects
+     * @param {Function} onPowerUp
      */
-    constructor() {
+    constructor(effects, onPowerUp) {
         this.container   = document.querySelector(".bricks");
         this.bricks      = [];
         this.horizBricks = 5;
@@ -22,6 +24,9 @@ export default class Bricks {
         this.brickHeight = 2.5;
         this.brickWidth  = 4.6;
         this.bottom      = 0;
+        this.effects     = effects;
+        this.onPowerUp   = onPowerUp;
+        this.brickColors = ["#ff6b6b", "#ffd43b", "#51cf66", "#4dabf7"];
 
         this.create();
     }
@@ -65,8 +70,9 @@ export default class Bricks {
     createBrick(row, column) {
         const element = document.createElement("DIV");
 
-        element.style.top  = Utils.toEM(this.brickHeight * row);
-        element.style.left = Utils.toEM(this.brickWidth  * column);
+        element.style.top   = Utils.toEM(this.brickHeight * row);
+        element.style.left  = Utils.toEM(this.brickWidth  * column);
+        element.style.color = this.brickColors[row % this.brickColors.length];
         this.container.appendChild(element);
         this.bricks.push(new Brick(element));
     }
@@ -76,19 +82,26 @@ export default class Bricks {
     /**
      * Check if the Ball crashed any brick and remove it when it did
      * @param {Ball} ball
-     * @returns {Boolean} True if the ball crashed a brick
+     * @returns {Object|null} Brick data if crashed, null otherwise
      */
     crash(ball) {
         if (ball.pos.top > this.bottom) {
-            return false;
+            return null;
         }
-        return this.bricks.some((brick, index) => {
+        let result = null;
+        this.bricks.some((brick, index) => {
             if (brick.didCrash(ball)) {
+                result = {
+                    color : brick.element.style.color || "#121212",
+                    x     : brick.left + brick.width / 2,
+                    y     : brick.top + brick.height / 2,
+                };
                 this.remove(brick, index);
                 return true;
             }
             return false;
         });
+        return result;
     }
 
     /**
@@ -100,7 +113,21 @@ export default class Bricks {
     remove(brick, index) {
         this.bricks.splice(index, 1);
 
-        const el = brick.element;
+        const el    = brick.element;
+        const color = el.style.color || "#121212";
+        const x     = brick.left + brick.width / 2;
+        const y     = brick.top + brick.height / 2;
+
+        if (this.effects) {
+            this.effects.emitExplosion(x, y, color);
+        }
+
+        if (this.onPowerUp && Math.random() < 0.25) {
+            const types = ["W", "S", "M"];
+            const type  = types[Math.floor(Math.random() * types.length)];
+            this.onPowerUp(type, x, y);
+        }
+
         el.style.borderWidth = "1.5em";
 
         window.setTimeout(() => {

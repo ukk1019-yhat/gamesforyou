@@ -9,6 +9,7 @@ import Table        from "./Table.js";
 // Utils
 import Sounds       from "../../utils/Sounds.js";
 import Utils        from "../../utils/Utils.js";
+import Effects      from "../../utils/Effects.js";
 
 
 
@@ -41,6 +42,11 @@ export default class Puzzle {
     /** @type {HTMLImageElement} */
     #imageElem;
 
+    /** @type {Effects} */
+    #effects;
+    /** @type {Number} */
+    #lastTrail;
+
 
     /**
      * Puzzle Puzzle constructor
@@ -51,10 +57,13 @@ export default class Puzzle {
     constructor(sounds, imageName, pieceCount) {
         this.#display          = "game";
         this.#sounds           = sounds;
+        this.#lastTrail        = 0;
 
         this.#congratsElem     = document.querySelector(".congrats");
         this.#pauseElem        = document.querySelector(".pause");
         this.#previewElem      = document.querySelector(".preview");
+
+        this.#effects          = new Effects(document.querySelector(".container"));
 
         const imageUrl         = imageName.match(/([0-9]+)|([a-zA-Z]+)/g).join("/");
         this.#imageElem        = this.#previewElem.querySelector("img");
@@ -88,6 +97,7 @@ export default class Puzzle {
             window.clearInterval(this.interval);
         }
 
+        this.#effects.stop();
         this.#metrics.destroy();
         this.#drawer.destroy();
         this.#board.destroy();
@@ -98,6 +108,7 @@ export default class Puzzle {
         this.#previewElem  = null;
         this.#imageElem    = null;
 
+        this.#effects      = null;
         this.#metrics      = null;
         this.#instance     = null;
         this.#drawer       = null;
@@ -124,17 +135,21 @@ export default class Puzzle {
         if (this.#display !== "game" && this.#display !== "preview") {
             return;
         }
-        if (this.#previewElem.style.display !== "flex") {
+        if (!this.#previewElem.classList.contains("show")) {
             this.#previewElem.style.display = "flex";
+            this.#previewElem.offsetHeight;
+            this.#previewElem.classList.add("show");
             this.#display = "preview";
         } else if (event) {
             const pos = Utils.getMousePos(event);
             if (!Utils.inElement(pos, this.#imageElem)) {
-                this.#previewElem.style.display = "none";
+                this.#previewElem.classList.remove("show");
+                setTimeout(() => { this.#previewElem.style.display = "none"; }, 300);
                 this.#display = "game";
             }
         } else {
-            this.#previewElem.style.display = "none";
+            this.#previewElem.classList.remove("show");
+            setTimeout(() => { this.#previewElem.style.display = "none"; }, 300);
             this.#display = "game";
         }
     }
@@ -244,11 +259,22 @@ export default class Puzzle {
             this.#drawer.removePiece(piece);
             this.#table.dropPiece(piece, pos);
 
+            // Auto-snap (wider 15px threshold)
+            if (this.#board.canFit(piece, this.#table.scroll, this.#metrics.autoSnapDist)) {
+                this.#table.removePiece(piece);
+                this.#board.addPiece(piece, true);
+                this.#sounds.play("piece");
+                this.emitSparkleAt(piece);
+                this.complete();
+                return;
+            }
+
             // Drops the Piece in the Board and tries to fit it
             if (this.#board.canFit(piece, this.#table.scroll)) {
-                this.#board.addPiece(piece);
+                this.#board.addPiece(piece, true);
                 this.#table.removePiece(piece);
                 this.#sounds.play("piece");
+                this.emitSparkleAt(piece);
                 this.complete();
                 return;
             }
@@ -260,6 +286,7 @@ export default class Puzzle {
                     const set = new Set(this.#metrics, neighborPiece, piece);
                     this.#table.dropSet(set);
                     this.#sounds.play("piece");
+                    this.emitSparkleAt(piece);
                     return;
                 }
             }
@@ -271,11 +298,56 @@ export default class Puzzle {
                     neighborSet.addPiece(piece);
                     this.#table.removePiece(piece);
                     this.#sounds.play("piece");
+                    this.emitSparkleAt(piece);
                     return;
                 }
             }
 
             this.#sounds.play("drop");
+        }
+    }
+
+    /**
+     * Emits a sparkle effect at the piece's center
+     * @param {Piece} piece
+     * @returns {Void}
+     */
+    emitSparkleAt(piece) {
+        const rect = piece.element.getBoundingClientRect();
+        this.#effects.emitSparkle(
+            rect.left + rect.width / 2,
+            rect.top + rect.height / 2,
+            "#0588b2"
+        );
+    }
+
+    /**
+     * Called during drag for trail particles and proximity glow
+     * @param {MouseEvent} event
+     * @param {(Piece|Set)} partial
+     * @returns {Void}
+     */
+    onDragMove(event, partial) {
+        if (!this.#effects) return;
+        const now = Date.now();
+        if (now - this.#lastTrail > 50) {
+            this.#lastTrail = now;
+            const pos = Utils.getMousePos(event);
+            this.#effects.emitTrail(pos.left, pos.top, "#0588b2");
+        }
+        if (partial instanceof Piece && this.#board) {
+            const boardBounds = this.#board.bounds;
+            const pb = partial.element.getBoundingClientRect();
+            const cx = pb.left + pb.width / 2;
+            const cy = pb.top + pb.height / 2;
+            const extended = 50;
+            const near = (
+                cx > boardBounds.left - extended &&
+                cx < boardBounds.right + extended &&
+                cy > boardBounds.top - extended &&
+                cy < boardBounds.bottom + extended
+            );
+            partial.element.classList.toggle("near-board", near);
         }
     }
 

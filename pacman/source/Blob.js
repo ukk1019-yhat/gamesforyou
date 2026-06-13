@@ -242,8 +242,9 @@ export default class Blob {
      */
     drawDeath(ctx, count) {
         const delta = count / 50;
+        const hue   = (count * 15) % 360;
 
-        ctx.fillStyle = "rgb(255, 255, 51)";
+        ctx.fillStyle = `hsl(${hue}, 100%, 50%)`;
         ctx.beginPath();
         ctx.arc(0, 0, this.radius, (1.5 - delta) * Math.PI, (1.5 + delta) * Math.PI, true);
         ctx.lineTo(0, 0);
@@ -258,8 +259,9 @@ export default class Blob {
      */
     drawCircle(ctx, count) {
         const radius = Math.round(count / 2);
+        const hue    = (count * 10) % 360;
 
-        ctx.strokeStyle = "rgb(159, 159, 31)";
+        ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
         ctx.lineWidth   = 3;
         ctx.beginPath();
         ctx.arc(0, 0, radius, 0, 2 * Math.PI, true);

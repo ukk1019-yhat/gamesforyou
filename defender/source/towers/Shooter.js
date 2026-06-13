@@ -63,6 +63,11 @@ export default class Shooter {
         this.parent.ranges.startShoot(tower);
         tower.startShoot();
 
+        if (this.parent.effects) {
+            const pos = tower.centerPos;
+            this.parent.effects.emit(pos.left, pos.top, 8, "#ffaa00", { life: 300 });
+        }
+
         targets.forEach((list, index) => {
             const ammo = this.createAmmo(tower, list, index + 1);
             this.parent.sounds[tower.sound]();
@@ -107,6 +112,9 @@ export default class Shooter {
     moveAmmos(time) {
         this.ammos.forEach((ammo) => {
             const tower = ammo.tower;
+            if (this.parent.effects) {
+                this.parent.effects.emit(ammo.left + 8, ammo.top + 8, 2, tower.color || "#88ccff", { life: 200 });
+            }
             if (ammo.move(time)) {
                 this.attackTargets(ammo.targets, tower.damage);
                 this.parent.mobs.addToList(ammo.targets, tower);
@@ -133,6 +141,9 @@ export default class Shooter {
         targets.forEach((mob)=> {
             mob.hit(damage);
             this.parent.panel.updateMob(mob);
+            if (this.parent.mobs && this.parent.mobs.alerts) {
+                this.parent.mobs.alerts.damage(mob, damage);
+            }
 
             if (mob.life <= 0 && !mob.isDead) {
                 this.parent.mobs.killMob(mob);

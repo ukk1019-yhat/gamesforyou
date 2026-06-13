@@ -459,7 +459,12 @@ export default class Ghost {
         const center = this.board.ghostSize / 2;
         this.canvas.savePos(this.x, this.y);
         this.ctx.save();
-        this.ctx.translate(Math.round(this.x) - center, Math.round(this.y) - center);
+
+        let wobble = 0;
+        if (this.level.isFrighten(this.mode)) {
+            wobble = Math.sin(Date.now() * 0.015) * 1.5;
+        }
+        this.ctx.translate(Math.round(this.x) - center + wobble, Math.round(this.y) - center);
 
         this.ghostBody();
         if (this.level.isFrighten(this.mode)) {

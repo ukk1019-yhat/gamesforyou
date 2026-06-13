@@ -198,6 +198,22 @@ h1 {
     border: 1px solid rgb(204, 0, 0);
     background-color: rgb(255, 0, 0);
     opacity: .6;
+    animation: buildInvalid 0.4s ease-in-out infinite alternate;
+}
+
+@keyframes buildInvalid {
+    0%   { transform: translateX(-2px); }
+    100% { transform: translateX(2px); }
+}
+
+.valid .tower-placeholder2,
+.valid .tower-placeholder3 {
+    animation: buildValid 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes buildValid {
+    0%   { box-shadow: 0 0 5px rgb(0, 204, 0); }
+    100% { box-shadow: 0 0 15px rgb(0, 255, 0); }
 }
 
 .blocking {
@@ -507,4 +523,23 @@ h2 {
 }
 .menu-button:hover {
     background: linear-gradient(to bottom, rgb(204, 202, 202), rgb(134, 132, 130));
+}
+
+.upgrade-flash {
+    animation: upgradeFlash 0.5s ease-out;
+}
+
+@keyframes upgradeFlash {
+    0%   { filter: brightness(1); }
+    30%  { filter: brightness(2.5) drop-shadow(0 0 10px rgb(255, 204, 0)); }
+    100% { filter: brightness(1); }
+}
+
+.alert-glow {
+    animation: alertGlow 1s ease-in-out infinite alternate;
+}
+
+@keyframes alertGlow {
+    0%   { text-shadow: 0 0 5px rgb(255, 204, 0); }
+    100% { text-shadow: 0 0 20px rgb(255, 204, 0), 0 0 40px rgb(255, 153, 0); }
 }

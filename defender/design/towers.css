@@ -88,6 +88,13 @@
 .tower.selected .tower-range {
     display: block;
     z-index: 3;
+    animation: rangePulse 2s ease-in-out infinite;
+}
+
+@keyframes rangePulse {
+    0%   { opacity: 0.3; transform: scale(1); }
+    50%  { opacity: 0.15; transform: scale(1.02); }
+    100% { opacity: 0.3; transform: scale(1); }
 }
 .tower.selected .tower-placeholder2,
 .tower.selected .tower-placeholder3 {
@@ -147,6 +154,7 @@
     bottom: 0.4rem;
     right: 0.2rem;
     z-index: 1;
+    transition: transform 0.15s ease-out;
 }
 .tower-rotate3 {
     bottom: 0.2rem;

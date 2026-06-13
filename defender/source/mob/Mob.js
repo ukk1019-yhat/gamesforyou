@@ -232,7 +232,15 @@ export default class Mob {
      */
     hit(dmg) {
         const life = Math.max(this.actualLife - dmg, 0);
+        const pct  = life / this.calcTotalLife();
         this.lifeElem.style.width = Utils.toPX(life * this.boardSize / this.calcTotalLife());
+        if (pct > 0.6) {
+            this.lifeElem.style.backgroundColor = "#4caf50";
+        } else if (pct > 0.3) {
+            this.lifeElem.style.backgroundColor = "#ffc107";
+        } else {
+            this.lifeElem.style.backgroundColor = "#f44336";
+        }
         this.actualLife -= dmg;
 
         this.element.classList.add("hit");

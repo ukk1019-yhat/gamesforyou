@@ -206,11 +206,14 @@ h1 {
     position: relative;
     width: 100%;
     height: 100%;
-    transition: transform 0.2s;
+    transition: transform 0.3s cubic-bezier(.4, 0, .2, 1);
     transform-style: preserve-3d;
 }
 .card-show-back .card-inner {
-    transform: rotateY(180deg);
+    transform: rotateY(180deg) scale(1.05);
+}
+.card-show-front .card-inner {
+    transform: rotateY(0deg) scale(1);
 }
 .card-front, .card-back {
     position: absolute;
@@ -221,6 +224,23 @@ h1 {
 .card-back {
     transform: rotateY(180deg);
 }
+
+.card:not(.card-show-back):not(.card-dragging):hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-dragging {
+    box-shadow: 0 0 20px 8px rgba(226, 39, 41, 0.5), 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+    z-index: 1000;
+    cursor: grabbing;
+}
+body > .card-dragging.card,
+body > .card.card-dragging {
+    cursor: grabbing;
+}
+
 body > .card.card {
     cursor: grabbing;
 }
@@ -234,6 +254,66 @@ body > .card.card {
     top: 0;
     left: 0;
     cursor: grabbing;
+}
+
+.chain.card-dragging {
+    box-shadow: 0 0 20px 8px rgba(226, 39, 41, 0.4), 0 8px 32px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+}
+
+.column-target {
+    position: relative;
+}
+.column-target::after {
+    content: "";
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    right: -4px;
+    bottom: -4px;
+    border: 2px solid var(--hint-color);
+    border-radius: 10px;
+    box-shadow: 0 0 12px 4px rgba(5, 136, 178, 0.3);
+    pointer-events: none;
+    animation: targetPulse 0.8s ease-in-out infinite alternate;
+}
+@keyframes targetPulse {
+    from { opacity: 0.4; }
+    to   { opacity: 1; }
+}
+
+.drag-preview {
+    position: absolute;
+    width: var(--card-width);
+    height: var(--card-height);
+    opacity: 0.25;
+    pointer-events: none;
+    z-index: 5;
+    border: 2px dashed var(--hint-color);
+    border-radius: 8px;
+    background: rgba(5, 136, 178, 0.08);
+}
+
+.foundation-glow {
+    animation: foundationPulse 0.6s ease-out;
+}
+@keyframes foundationPulse {
+    0%   { box-shadow: 0 0 0 0 rgba(226, 39, 29, 0.6); }
+    50%  { box-shadow: 0 0 20px 10px rgba(226, 39, 29, 0.3); }
+    100% { box-shadow: 0 0 0 0 rgba(226, 39, 29, 0); }
+}
+
+.moves-blink {
+    animation: blinkRed 0.5s ease-in-out 3;
+    display: inline-block;
+}
+@keyframes blinkRed {
+    0%, 100% { color: inherit; }
+    50%      { color: var(--main-color); }
+}
+
+.timer {
+    font-variant-numeric: tabular-nums;
 }
 
 

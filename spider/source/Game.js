@@ -29,15 +29,17 @@ export default class Game {
      * @param {Instance} instance
      * @param {Display}  display
      * @param {Sounds}   sounds
+     * @param {Effects}  effects
      * @param {Number}   suits
      */
-    constructor(instance, display, sounds, suits) {
+    constructor(instance, display, sounds, effects, suits) {
         this.instance    = instance;
         this.display     = display;
         this.sounds      = sounds;
+        this.effects     = effects;
         this.suits       = suits;
 
-        this.animation   = new Animation();
+        this.animation   = new Animation(this.effects);
         this.deck        = new Deck(this.suits);
         this.stock       = new Stock();
         this.foundations = new Foundations();
@@ -251,6 +253,13 @@ export default class Game {
         this.sounds.play("foundation");
         await this.animation.foundation(sequence, null, this.foundations.bounds);
         this.foundations.push(sequence);
+
+        // Foundation glow effect
+        const glowIndex = Data.foundations - this.foundations.amount;
+        this.foundations.children[glowIndex].classList.remove("foundation-glow");
+        this.foundations.children[glowIndex].offsetWidth; // reflow
+        this.foundations.children[glowIndex].classList.add("foundation-glow");
+
         this.history.addFoundation(column);
         this.score.addFoundation();
         this.flip(column);
@@ -314,6 +323,9 @@ export default class Game {
         }
         this.isUndoing = true;
         this.hints.invalidate();
+        if (this.effects) {
+            this.effects.flash(document.querySelector(".tableau"), "rgba(255,255,255,0.08)", 200);
+        }
 
         const action = this.history.undoAction();
         switch (action.type) {
@@ -421,6 +433,7 @@ export default class Game {
         if (!this.hints.showHint()) {
             this.display.showMovesError();
             this.score.stopTimer();
+            this.score.blinkMoves();
         }
         this.score.subHint();
     }

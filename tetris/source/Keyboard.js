@@ -79,6 +79,8 @@ export default class Keyboard {
                 shortcut = "C";
             } else if (KeyCode.isErase(key)) {
                 shortcut = "B";
+            } else if (keyCode === "C") {
+                shortcut = "H";
             } else if (KeyCode.isPauseContinue(key)) {
                 shortcut = "P";
             } else if (KeyCode.isUp(key)) {

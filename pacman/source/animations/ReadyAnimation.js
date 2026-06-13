@@ -19,14 +19,29 @@ export default class ReadyAnimation extends Animation {
 
         this.blocksGame = true;
         this.endTime    = 3000;
+    }
 
-        this.canvas.drawText({
-            color : "rgb(255, 255, 51)",
-            text  : "Ready!",
-            pos   : { x: 14, y: this.board.centerTextTop },
-            size  : null,
-            align : null,
-            alpha : null,
+    animate() {
+        const pulse = 0.5 + Math.sin(this.time * 0.008) * 0.5;
+        const posX  = 14 * this.board.tileSize;
+        const posY  = this.board.centerTextTop * this.board.tileSize;
+
+        this.canvas.clearSavedRects();
+        this.canvas.ctx.save();
+        this.canvas.ctx.shadowColor = "rgb(255, 255, 51)";
+        this.canvas.ctx.shadowBlur  = 15 * pulse;
+        this.canvas.ctx.font       = `1.2em "Whimsy TT"`;
+        this.canvas.ctx.textAlign  = "center";
+        this.canvas.ctx.textBaseline = "middle";
+        this.canvas.ctx.fillStyle  = "rgb(255, 255, 51)";
+        this.canvas.ctx.fillText("Ready!", posX, posY);
+        this.canvas.ctx.restore();
+
+        this.canvas.saveRect({
+            x      : posX - 80,
+            y      : posY - 15,
+            width  : 160,
+            height : 30,
         });
     }
 }

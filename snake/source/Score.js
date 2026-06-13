@@ -122,4 +122,17 @@ export default class Score {
             this.time = this.speedTimes[this.level - 1];
         }
     }
+
+    showPopup(text, top, left) {
+        const game = document.querySelector(".game");
+        const fs   = parseFloat(getComputedStyle(game).fontSize) || 15;
+        const cell = 1.5 * fs;
+        const el   = document.createElement("DIV");
+        el.className = "scorePopup";
+        el.textContent = text;
+        el.style.left = ((left - 1) * cell) + "px";
+        el.style.top  = ((top - 1) * cell) + "px";
+        game.appendChild(el);
+        window.setTimeout(() => el.remove(), 800);
+    }
 }

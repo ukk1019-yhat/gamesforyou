@@ -12,6 +12,7 @@ import Tail         from "./Tail.js";
 // Utils
 import Sounds       from "../../utils/Sounds.js";
 import Utils        from "../../utils/Utils.js";
+import Effects      from "../../utils/Effects.js";
 
 // Variables
 let mode       = null;
@@ -28,6 +29,13 @@ let scores     = null;
 
 let hasStarted = false;
 let startTime  = 0;
+
+// Effects & Power-ups
+let effects    = null;
+let powerUps   = [];
+let extraBalls = [];
+let slowTimer  = null;
+let multiTimer = null;
 
 
 
@@ -54,6 +62,11 @@ function startGame() {
  */
 function finishGame() {
     board.end();
+    clearExtraBalls();
+    powerUps.forEach((pu) => Utils.removeElement(pu.element));
+    powerUps = [];
+    if (slowTimer)  { clearTimeout(slowTimer);  slowTimer  = null; }
+    if (multiTimer) { clearTimeout(multiTimer); multiTimer = null; }
     if (mode.isBricksMode) {
         bricks.destroy();
     }
@@ -104,6 +117,11 @@ function gameOver() {
     if (mode.isBricksMode) {
         bricks.destroy();
     }
+
+    if (effects) {
+        const rect = document.querySelector("#container").getBoundingClientRect();
+        effects.emitCelebration(rect);
+    }
 }
 
 /**
@@ -153,12 +171,20 @@ function onShipMove() {
 function newGame(gameMode) {
     hasStarted = false;
 
+    // Clean up from previous game
+    clearExtraBalls();
+    powerUps.forEach((pu) => Utils.removeElement(pu.element));
+    powerUps = [];
+    if (slowTimer)  { clearTimeout(slowTimer);  slowTimer  = null; }
+    if (multiTimer) { clearTimeout(multiTimer); multiTimer = null; }
+
     display.set("playing").hide();
     mode.set(gameMode);
     score.restart();
 
     ship = new Ship(board, mode.shipWidth, onShipMove);
     ball = new Ball(board.width, board.height);
+    ball.effects = effects;
     tail = new Tail();
 
     board.start((e) => ship.mouseMove(e));
@@ -167,7 +193,7 @@ function newGame(gameMode) {
     tail.start(ball);
 
     if (mode.isBricksMode) {
-        bricks = new Bricks();
+        bricks = new Bricks(effects, spawnPowerUp);
     }
     requestAnimation();
 }
@@ -210,12 +236,19 @@ function requestAnimation() {
  * @returns {Void}
  */
 function moveBall(speed) {
-    let crash = false;
+    let crash   = false;
+    let crashed = null;
+
     ball.move(speed);
 
-    if (mode.isBricksMode && bricks.crash(ball)) {
+    if (mode.isBricksMode) {
+        crashed = bricks.crash(ball);
+    }
+
+    if (crashed) {
         sounds.play("brick");
         score.inc();
+        score.showPopup("+1", crashed.x, crashed.y);
         ball.randomChange();
     } else if (ball.bottomCrash()) {
         sounds.play("end");
@@ -226,6 +259,7 @@ function moveBall(speed) {
         } else if (ball.shipCrash(ship)) {
             sounds.play("bounce");
             ship.ballCrash();
+            effects.screenShake(document.querySelector(".board"), 4, 150);
             if (mode.isSpeedMode) {
                 ball.changeAngle(ship);
                 ball.accelerate();
@@ -245,6 +279,217 @@ function moveBall(speed) {
         }
         if (crash && (mode.isRandomMode || mode.isBricksMode)) {
             ball.randomChange();
+        }
+    }
+
+    moveExtraBalls(speed);
+    checkPowerUps();
+}
+
+/**
+ * Spawn a power-up at the given position
+ * @param {String} type
+ * @param {Number} x
+ * @param {Number} y
+ * @returns {Void}
+ */
+function spawnPowerUp(type, x, y) {
+    const colors = { W : "#4dabf7", S : "#51cf66", M : "#ff6b6b" };
+    const el     = document.createElement("DIV");
+
+    el.className        = "powerup";
+    el.dataset.type     = type;
+    el.style.background = colors[type];
+    el.style.left       = `${Math.round(x - 11)}px`;
+    el.style.top        = `${Math.round(y - 11)}px`;
+    document.querySelector(".board").appendChild(el);
+
+    powerUps.push({
+        element : el,
+        type    : type,
+        x       : x - 11,
+        y       : y - 11,
+        speed   : 2,
+        size    : 22,
+    });
+}
+
+/**
+ * Check power-up collisions with the ship
+ * @returns {Void}
+ */
+function checkPowerUps() {
+    for (let i = powerUps.length - 1; i >= 0; i--) {
+        const pu = powerUps[i];
+
+        pu.y += pu.speed;
+        pu.element.style.top = `${Math.round(pu.y)}px`;
+
+        if (pu.y > board.height) {
+            Utils.removeElement(pu.element);
+            powerUps.splice(i, 1);
+            continue;
+        }
+
+        const sPos  = ship.pos;
+        const sW    = ship.width;
+        const pMidX = pu.x + pu.size / 2;
+        const pBot  = pu.y + pu.size;
+
+        if (pBot >= sPos.top && pMidX >= sPos.left && pMidX <= sPos.left + sW) {
+            activatePowerUp(pu.type);
+            Utils.removeElement(pu.element);
+            powerUps.splice(i, 1);
+        }
+    }
+}
+
+/**
+ * Activate a collected power-up
+ * @param {String} type
+ * @returns {Void}
+ */
+function activatePowerUp(type) {
+    sounds.play("bounce");
+
+    if (type === "W") {
+        ship.setWideMode(10);
+    } else if (type === "S") {
+        activateSlowMode(8);
+    } else if (type === "M") {
+        activateMultiBall();
+    }
+}
+
+/**
+ * Slow down the ball for a duration
+ * @param {Number} duration
+ * @returns {Void}
+ */
+function activateSlowMode(duration) {
+    if (slowTimer) {
+        clearTimeout(slowTimer);
+        [ball, ...extraBalls].forEach((b) => {
+            if (b && b._origSpeed !== undefined) {
+                b.speed = b._origSpeed;
+                delete b._origSpeed;
+            }
+        });
+    }
+    [ball, ...extraBalls].forEach((b) => {
+        if (b) {
+            b._origSpeed = b.speed;
+            b.speed      = Math.max(b.speed * 0.5, 3);
+        }
+    });
+    slowTimer = setTimeout(() => {
+        [ball, ...extraBalls].forEach((b) => {
+            if (b && b._origSpeed !== undefined) {
+                b.speed = b._origSpeed;
+                delete b._origSpeed;
+            }
+        });
+        slowTimer = null;
+    }, duration * 1000);
+}
+
+/**
+ * Spawn extra balls for multi-ball mode
+ * @returns {Void}
+ */
+function activateMultiBall() {
+    if (multiTimer) {
+        clearTimeout(multiTimer);
+        clearExtraBalls();
+    }
+
+    const dirs = [
+        { dt : ball.dirTop, dl : ball.dirLeft, angleOff : 30 },
+        { dt : -1,           dl : 1,            angleOff : -30 },
+    ];
+
+    dirs.forEach((d) => {
+        const el = document.createElement("DIV");
+        el.className = "ball";
+        document.querySelector(".board").appendChild(el);
+
+        extraBalls.push({
+            element      : el,
+            top          : ball.top,
+            left         : ball.left,
+            dirTop       : d.dt,
+            dirLeft      : d.dl,
+            speed        : ball.speed,
+            angle        : Utils.clamp(ball.angle + d.angleOff, 25, 75),
+            size         : ball.size,
+            boardWidth   : ball.boardWidth,
+            boardHeight  : ball.boardHeight,
+            hue          : (ball.hue + 120) % 360,
+            _origSpeed   : ball.speed,
+            effects      : effects,
+            get pos()    { return { top : this.top, left : this.left }; },
+            setDirTop(v) { this.dirTop = v; },
+            setDirLeft(v){ this.dirLeft = v; },
+        });
+    });
+
+    multiTimer = setTimeout(() => {
+        clearExtraBalls();
+        multiTimer = null;
+    }, 8000);
+}
+
+/**
+ * Remove all extra balls
+ * @returns {Void}
+ */
+function clearExtraBalls() {
+    extraBalls.forEach((eb) => Utils.removeElement(eb.element));
+    extraBalls = [];
+    if (multiTimer) {
+        clearTimeout(multiTimer);
+        multiTimer = null;
+    }
+}
+
+/**
+ * Move and update extra balls
+ * @param {Number} speed
+ * @returns {Void}
+ */
+function moveExtraBalls(speed) {
+    for (let i = extraBalls.length - 1; i >= 0; i--) {
+        const eb  = extraBalls[i];
+        const my  = eb.angle / 90;
+
+        eb.top  += eb.speed * eb.dirTop * my * speed;
+        eb.left += eb.speed * eb.dirLeft * (1 - my) * speed;
+
+        if (eb.top <= 0) {
+            eb.top = 0;
+            eb.dirTop = 1;
+        }
+        if (eb.left <= 0) {
+            eb.left = 0;
+            eb.dirLeft = 1;
+        }
+        if (eb.left + eb.size >= eb.boardWidth) {
+            eb.left = eb.boardWidth - eb.size;
+            eb.dirLeft = -1;
+        }
+        if (eb.top + eb.size >= eb.boardHeight) {
+            Utils.removeElement(eb.element);
+            extraBalls.splice(i, 1);
+            continue;
+        }
+
+        eb.hue = (eb.hue + 3) % 360;
+        eb.element.style.top       = `${Math.round(eb.top)}px`;
+        eb.element.style.left      = `${Math.round(eb.left)}px`;
+        eb.element.style.boxShadow = `inset 0 0 0 1.5em hsl(${eb.hue}, 100%, 50%), 0 0 10px hsl(${eb.hue}, 100%, 60%)`;
+
+        if (effects) {
+            effects.emitTrail(eb.left + eb.size / 2, eb.top + eb.size / 2, `hsl(${eb.hue}, 100%, 60%)`);
         }
     }
 }
@@ -344,6 +589,7 @@ function main() {
     board    = new Board(onBoardClick);
     scores   = new HighScores();
     keyboard = new Keyboard(display, scores, getShortcuts());
+    effects  = new Effects(document.querySelector("#container"));
 }
 
 // Load the game

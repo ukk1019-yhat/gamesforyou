@@ -39,8 +39,11 @@ export default class Display {
      */
     show() {
         this.container.className = this.current;
+        this.container.style.opacity = "0";
         this.header.innerHTML    = this.messages[this.current][0];
         this.paragraph.innerHTML = this.messages[this.current][1];
+        void this.container.offsetWidth;
+        this.container.style.opacity = "1";
     }
 
     /**

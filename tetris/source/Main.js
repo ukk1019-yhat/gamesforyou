@@ -9,6 +9,7 @@ import Tetriminos   from "./Tetriminos.js";
 // Utils
 import Sounds       from "../../utils/Sounds.js";
 import Utils        from "../../utils/Utils.js";
+import Effects      from "../../utils/Effects.js";
 
 // Variables
 let display    = null;
@@ -21,6 +22,7 @@ let score      = null;
 let tetriminos = null;
 let animation  = null;
 let startTime  = null;
+let effects    = null;
 
 // Constants
 const tetriminoSize   = 2;
@@ -82,6 +84,9 @@ function finishGame() {
  * @returns {Void}
  */
 function showGameOver() {
+    const rect = document.querySelector("#container").getBoundingClientRect();
+    effects.emitExplosion(rect.width / 2, rect.height / 2, "#ff0000");
+    effects.screenShake(document.querySelector("#container"), 10, 400);
     display.set("gameOver").show();
     sounds.play("end");
     scores.setInput();
@@ -95,6 +100,12 @@ function showGameOver() {
 function destroyGame() {
     board.clearElements();
     tetriminos.clearElements();
+    effects.stop();
+    const holdElem = document.querySelector("#hold");
+    if (holdElem) {
+        holdElem.className = "";
+        holdElem.innerHTML = "<div class=\"empty\">-</div>";
+    }
 }
 
 /**
@@ -140,10 +151,12 @@ function onWindEnd() {
 function newGame() {
     display.set("playing").hide();
     keyboard.reset();
+    effects.stop();
+    effects.resize();
 
-    board      = new Board(tetriminoSize, onWindEnd);
-    score      = new Score(level.get(), maxInitialLevel);
-    tetriminos = new Tetriminos(board, sounds, score, tetriminoSize, showGameOver);
+    board      = new Board(tetriminoSize, onWindEnd, effects);
+    score      = new Score(level.get(), maxInitialLevel, effects);
+    tetriminos = new Tetriminos(board, sounds, score, tetriminoSize, showGameOver, effects);
 
     requestAnimation();
 }
@@ -164,6 +177,7 @@ function requestAnimation() {
             tetriminos.softDrop();
             score.resetTime();
         }
+        tetriminos.updateLock(time);
         keyboard.holdingKey();
 
         if (display.isPlaying && !board.isWinking()) {
@@ -217,6 +231,7 @@ function getShortcuts() {
             D : () => tetriminos.moveRight(),
             X : () => tetriminos.rotateRight(),
             Z : () => tetriminos.rotateLeft(),
+            H : () => tetriminos.hold(),
             P : () => startPause(),
             M : () => sounds.toggle()
         },
@@ -270,6 +285,7 @@ function main() {
     sounds   = new Sounds("tetris.sound");
     scores   = new HighScores();
     keyboard = new Keyboard(display, scores, getShortcuts());
+    effects  = new Effects(document.querySelector("#container"));
 }
 
 // Load the game

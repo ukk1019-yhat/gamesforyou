@@ -89,21 +89,29 @@ export default class Board {
      * @param {{top: Number, left: Number}} scroll
      * @returns {Boolean}
      */
-    canFit(other, scroll) {
+    get bounds() {
+        return this.#boardElem.getBoundingClientRect();
+    }
+
+    getFitPosition(other, scroll) {
         const bounds = this.#boardElem.getBoundingClientRect();
-        const fitPos = {
+        return {
             top  : bounds.top  + scroll.top  + this.#metrics.scaleSize * other.row - 8,
             left : bounds.left + scroll.left + this.#metrics.scaleSize * other.col - 8,
-        }
-        const dist = Utils.dist(fitPos, other.pos);
-        return dist < this.#metrics.delta;
+        };
+    }
+
+    canFit(other, scroll, threshold) {
+        const fitPos = this.getFitPosition(other, scroll);
+        const dist   = Utils.dist(fitPos, other.pos);
+        return dist < (threshold || this.#metrics.delta);
     }
 
     /**
      * Inserts a Piece into the Board
      * @param {Piece} piece
      */
-    insertPiece(piece) {
+    insertPiece(piece, animate = false) {
         this.#matrix[piece.row][piece.col] = piece;
 
         const top  = this.#metrics.scaleSize * piece.row - this.#metrics.scalePadding;
@@ -112,6 +120,10 @@ export default class Board {
         piece.setActionID();
         piece.position(top, left);
         piece.appendTo(this.#boardElem);
+        if (animate) {
+            piece.element.classList.add("snap-drop");
+            setTimeout(() => piece.element.classList.remove("snap-drop"), 500);
+        }
     }
 
     /**
@@ -119,8 +131,8 @@ export default class Board {
      * @param {Piece} piece
      * @returns {Void}
      */
-    addPiece(piece) {
-        this.insertPiece(piece);
+    addPiece(piece, animate = false) {
+        this.insertPiece(piece, animate);
         this.#metrics.incPlacedPiece();
         this.#list.addLast(piece);
         this.#instance.saveBoardPieces(this.#list);

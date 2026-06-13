@@ -191,6 +191,22 @@ export default class Column {
 
 
     /**
+     * Highlights the Column as a valid drop target
+     * @returns {Void}
+     */
+    highlight() {
+        this.container.classList.add("column-target");
+    }
+
+    /**
+     * Removes the highlight
+     * @returns {Void}
+     */
+    unhighlight() {
+        this.container.classList.remove("column-target");
+    }
+
+    /**
      * Shows the front of the last Card if required
      * @returns {Boolean}
      */

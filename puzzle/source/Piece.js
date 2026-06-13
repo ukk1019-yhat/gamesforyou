@@ -261,6 +261,7 @@ export default class Piece {
         this.startPos = { top : pos.top - bounds.top, left : pos.left - bounds.left };
 
         document.body.appendChild(this.#canvas);
+        this.#canvas.classList.add("dragging-piece");
         this.translate(pos);
     }
 
@@ -281,6 +282,7 @@ export default class Piece {
      */
     dropInDrawer(drawer) {
         this.inDrawer = drawer;
+        this.#canvas.classList.remove("dragging-piece", "near-board");
         this.#canvas.style.transform = "";
     }
 
@@ -291,6 +293,7 @@ export default class Piece {
      */
     dropInTable(pos) {
         this.inDrawer = "";
+        this.#canvas.classList.remove("dragging-piece", "near-board");
         this.translate(pos);
     }
 }

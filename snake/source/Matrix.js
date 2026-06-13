@@ -80,7 +80,7 @@ export default class Matrix {
         do {
             top   = Utils.rand(1, this.board.matrixRows    - 2);
             left  = Utils.rand(1, this.board.matrixColumns - 2);
-            found = this.matrix[top][left] >= this.board.borderValue;
+            found = this.matrix[top][left] >= this.board.borderValue || this.matrix[top][left] === this.board.obstacleValue;
         } while (found);
 
         this.matrix[top][left] = this.board.foodValue;
@@ -96,7 +96,8 @@ export default class Matrix {
      * @returns {Boolean}
      */
     crashed(top, left) {
-        return this.matrix[top][left] >= this.board.borderValue;
+        const val = this.matrix[top][left];
+        return val >= this.board.borderValue || val === this.board.obstacleValue;
     }
 
     /**

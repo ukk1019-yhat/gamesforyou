@@ -19,6 +19,7 @@ export default class Ship {
     constructor(board, shipWidth, onMove) {
         this.board          = board;
         this.emWidth        = shipWidth;
+        this.originalWidth  = shipWidth;
         this.onMove         = onMove;
         this.minWidth       = 3;
         this.extraWidth     = 1;
@@ -139,6 +140,35 @@ export default class Ship {
     }
 
 
+
+    /**
+     * Temporarily increases the ship width
+     * @param {Number} duration
+     * @returns {Void}
+     */
+    setWideMode(duration) {
+        if (this.wideTimeout) {
+            clearTimeout(this.wideTimeout);
+            this.emWidth = this.originalWidth;
+        }
+        this.emWidth = this.originalWidth + 2;
+        this.left -= 1;
+        this.setWidth();
+        this.setLeft();
+        this.wideTimeout = setTimeout(() => this.resetWidth(), duration * 1000);
+    }
+
+    /**
+     * Reset the ship width
+     * @returns {Void}
+     */
+    resetWidth() {
+        this.emWidth = this.originalWidth;
+        this.left = (this.board.width - this.width) / 2;
+        this.setWidth();
+        this.setLeft();
+        this.wideTimeout = null;
+    }
 
     /**
      * Returns the position of the Ship

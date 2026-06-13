@@ -34,6 +34,9 @@ export default class Ball {
         this.left        = 0;
         this.boardWidth  = boardWidth;
         this.boardHeight = boardHeight;
+
+        this.hue     = 0;
+        this.effects = null;
     }
 
     /**
@@ -78,6 +81,12 @@ export default class Ball {
         this.left += this.speed * this.dirLeft * (1 - movey) * speed;
 
         Utils.setPosition(this.element, this.top, this.left);
+
+        this.hue = (this.hue + 2) % 360;
+        this.element.style.boxShadow = `inset 0 0 0 1.5em hsl(${this.hue}, 100%, 50%), 0 0 12px hsl(${this.hue}, 100%, 60%)`;
+        if (this.effects) {
+            this.effects.emitTrail(this.left + this.size / 2, this.top + this.size / 2, `hsl(${this.hue}, 100%, 60%)`);
+        }
     }
 
     /**

@@ -105,6 +105,7 @@ a:hover {
 
 .playing    #next,
 .mainScreen #next,
+.playing    #hold,
 .playing    .board,
 .mainScreen .board {
     display: block;
@@ -358,17 +359,18 @@ a:hover {
 /**
  * Scores Design
  */
-.next, .level, .score, .lines {
+.next, .hold, .level, .score, .lines {
     position: absolute;
     left: 0;
     right: 0;
     height: 2.7em;
     font-size: 2.5em;
 }
-.next  { top: 0.5em; height: 4em; }
-.level { top: 5em;  }
-.score { top: 8em;  }
-.lines { top: 11em; }
+.hold  { top: 0.1em; height: 4em; }
+.next  { top: 4.6em; height: 4em; }
+.level { top: 9em;  }
+.score { top: 12em;  }
+.lines { top: 15em; }
 
     .content {
         position: absolute;
@@ -391,7 +393,7 @@ a:hover {
         line-height: 1em;
     }
 
-#next {
+#next, #hold {
     display: none;
     position: absolute;
     top: 0;
@@ -400,6 +402,132 @@ a:hover {
     bottom: 0;
     font-size: 0.4em;
 }
+#hold .empty {
+    display: block;
+    color: #677799;
+    text-align: center;
+    line-height: 10em;
+    font-size: 2em;
+    opacity: 0.4;
+}
+.playing #hold { display: block; }
+#hold {
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+#hold.swap-out {
+    opacity: 0;
+    transform: translateY(-2em);
+}
+#hold.swap-in {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/**
+ * Combo Popup
+ */
+.combo-popup {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2.5em;
+    font-weight: bold;
+    color: #FFD700;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.8), 2px 2px 2px black;
+    pointer-events: none;
+    z-index: 100;
+    opacity: 0;
+    transition: none;
+}
+.combo-popup.show {
+    display: block;
+    animation: comboAnim 0.8s ease-out forwards;
+}
+@keyframes comboAnim {
+    0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+    20%  { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+    40%  { transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 0; transform: translate(-50%, -70%) scale(0.8); }
+}
+
+/**
+ * Score Popup
+ */
+.score-popup {
+    display: none;
+    position: absolute;
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 0 0 8px rgba(255,255,255,0.6), 1px 1px 2px black;
+    pointer-events: none;
+    z-index: 100;
+    opacity: 0;
+}
+.score-popup.show {
+    display: block;
+    animation: scoreFloat 0.9s ease-out forwards;
+}
+@keyframes scoreFloat {
+    0%   { opacity: 1; transform: translateY(0) scale(0.8); }
+    30%  { opacity: 1; transform: translateY(-1em) scale(1.1); }
+    100% { opacity: 0; transform: translateY(-4em) scale(0.9); }
+}
+
+/**
+ * Lock Delay Flash
+ */
+.lock-flash div {
+    animation: lockPulse 0.15s ease-in-out 3 alternate;
+}
+@keyframes lockPulse {
+    from { box-shadow: inset 0 0 0 0.2em black, inset 0.4em -0.4em #CC0001, inset -0.4em 0.4em #FF6666, 0 0 15px rgba(255,0,0,0.6); }
+    to   { box-shadow: inset 0 0 0 0.2em black, inset 0.4em -0.4em #CC0001, inset -0.4em 0.4em #FF6666, 0 0 25px rgba(255,0,0,0.9); }
+}
+
+/**
+ * Landing Glow
+ */
+.landing-glow div {
+    animation: landFlash 0.3s ease-out forwards;
+}
+@keyframes landFlash {
+    0%   { filter: brightness(2); box-shadow: inset 0 0 0 0.2em black, inset 0.4em -0.4em #FFF, inset -0.4em 0.4em #FFF, 0 0 20px rgba(255,255,255,0.8); }
+    100% { filter: brightness(1); }
+}
+
+/**
+ * Level Up Screen Flash
+ */
+.level-flash {
+    animation: screenFlash 0.4s ease-out forwards;
+}
+@keyframes screenFlash {
+    0%   { background-color: rgba(255, 255, 255, 0.5); }
+    100% { background-color: transparent; }
+}
+
+/**
+ * Ghost Gradient
+ */
+#ghost div {
+    box-shadow: inset 0 0 0 0.2em rgba(0,0,0,0.3), inset 0.4em -0.4em rgba(70,70,70,0.4), inset -0.4em 0.4em rgba(100,100,100,0.4) !important;
+    background: linear-gradient(to bottom, rgba(100,100,100,0.5), rgba(60,60,60,0.2)) !important;
+    transition: opacity 0.15s;
+}
+
+/**
+ * Piece Transition for smooth movement
+ */
+#piece {
+    transition: top 0.06s linear, left 0.06s linear;
+}
+#piece.instant {
+    transition: none;
+}
+
 .pauser {
     display: block;
     position: absolute;
@@ -588,13 +716,7 @@ a:hover {
         background-color: #00FF00;
     }
 
-    #ghost div {
-        box-shadow: inset 0 0 0 0.2em black, inset 0.4em -0.4em #464646, inset -0.4em 0.4em #666 !important;
-        background-color: #505050 !important;
-    }
-
-
-.r0, .r1, .r2, .r3 {
+    .r0, .r1, .r2, .r3 {
     display: none;
 }
 .rot0 .r0, .rot1 .r1,

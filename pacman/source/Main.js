@@ -10,6 +10,7 @@ import HighScores   from "./HighScores.js";
 import Score        from "./score/Score.js";
 
 // Utils
+import Effects      from "../../utils/Effects.js";
 import KeyCode      from "../../utils/KeyCode.js";
 import Sounds       from "../../utils/Sounds.js";
 import Utils        from "../../utils/Utils.js";
@@ -29,7 +30,9 @@ let blob       = null;
 let animation  = null;
 let startTime  = null;
 let actions    = null;
-let shortcuts  = null;;
+let shortcuts  = null;
+let container  = null;
+let effects    = null;
 
 
 
@@ -78,6 +81,7 @@ function blobEating() {
     if (atPill) {
         const value = food.eatPill(tile);
         const total = food.getLeftPills();
+        const pos   = board.getTileXYCenter(tile);
 
         fruit.add(total);
         score.pill(value);
@@ -86,6 +90,9 @@ function blobEating() {
 
         if (value === board.level.energizerValue) {
             ghosts.frighten(blob);
+            effects.emitExplosion(pos.x, pos.y, "#4dabf7");
+        } else {
+            effects.emitSparkle(pos.x, pos.y, "#fff");
         }
         sounds.play(blob.getSound());
 
@@ -93,6 +100,8 @@ function blobEating() {
         const text = score.fruit();
         fruit.eat();
         animations.fruitScore(text, board.fruitTile);
+        const fpos = board.fruitPos;
+        effects.emitSparkle(fpos.x, fpos.y, "#ffd43b");
     }
     blob.onEat(atPill, ghosts.areFrighten());
 }
@@ -106,10 +115,15 @@ function ghostCrash() {
         const text = score.kill(eyesCounter);
         animations.ghostScore(text, tile);
         sounds.play("kill");
+        const pos = board.getTileXYCenter(tile);
+        effects.emitExplosion(pos.x, pos.y, "#4dabf7");
+        effects.emitSparkle(pos.x, pos.y);
     }, () => {
         board.clearGame();
         animations.death(blob, newLife);
         sounds.play("death");
+        effects.emitExplosion(blob.x, blob.y, "#ffd43b");
+        effects.screenShake(container, 8, 300);
     });
 }
 
@@ -180,8 +194,25 @@ function requestAnimation() {
             if (food.getLeftPills() === 0) {
                 score.newLevel();
                 animations.endLevel(newLevel);
+                effects.emitCelebration(container.getBoundingClientRect());
             }
             ghostCrash();
+
+            effects.emitTrail(blob.x, blob.y, "#ffff33");
+
+            if (ghosts.areFrighten()) {
+                board.energizers.forEach((energizer) => {
+                    const center = board.getTileXYCenter(energizer);
+                    const pulse  = Math.sin(Date.now() * 0.008) * 0.5 + 0.5;
+                    board.gameCanvas.ctx.save();
+                    board.gameCanvas.ctx.beginPath();
+                    board.gameCanvas.ctx.arc(center.x, center.y, board.energizerSize + 2 + pulse * 3, 0, Math.PI * 2);
+                    board.gameCanvas.ctx.fillStyle = `rgba(77, 171, 247, ${0.05 + pulse * 0.1})`;
+                    board.gameCanvas.ctx.fill();
+                    board.gameCanvas.ctx.restore();
+                    board.gameCanvas.savePos(center.x, center.y);
+                });
+            }
         }
         requestAnimation();
     });
@@ -353,6 +384,8 @@ function main() {
     animations = new Animations(board);
     sounds     = new Sounds("pacman.sound");
     scores     = new HighScores();
+    container  = document.querySelector("#container");
+    effects    = new Effects(container);
 
     createActionsShortcuts();
     initDomListeners();

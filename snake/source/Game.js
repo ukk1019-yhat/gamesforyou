@@ -4,6 +4,9 @@ import Instance     from "./Instance.js";
 import Matrix       from "./Matrix.js";
 import Snake        from "./Snake.js";
 
+// Utils
+import Utils        from "../../utils/Utils.js";
+
 
 
 /**
@@ -17,8 +20,9 @@ export default class Game {
      * @param {Instance} instance
      * @param {Object=}  data
      */
-    constructor(board, instance, data) {
+    constructor(board, instance, data, level) {
         this.instance = instance;
+        this.foodCount = 1;
         if (data) {
             this.matrix = new Matrix(board, instance, data.matrix, data.head, data.tail);
             this.snake  = new Snake(board, this.matrix, data.links, data.dirTop, data.dirLeft);
@@ -27,6 +31,9 @@ export default class Game {
             this.matrix = new Matrix(board, instance);
             this.snake  = new Snake(board, this.matrix);
             this.food   = new Food(board, this.matrix.addFood());
+            if (level >= 3) {
+                this.addObstacles(level);
+            }
         }
     }
 
@@ -48,7 +55,32 @@ export default class Game {
      * @returns {Void}
      */
     addFood() {
-        this.food.add(this.matrix.addFood());
+        this.foodCount++;
+        const isGolden = this.foodCount % 5 === 0;
+        this.food.add(this.matrix.addFood(), isGolden);
+    }
+
+    addObstacles(level) {
+        const count = level === 3 ? 8 : 14;
+        const snakeContainer = document.querySelector(".snake");
+        for (let i = 0; i < count; i++) {
+            let top, left, found = true, attempts = 0;
+            do {
+                top   = Utils.rand(1, this.board.matrixRows    - 2);
+                left  = Utils.rand(1, this.board.matrixColumns - 2);
+                found = this.matrix.matrix[top][left] !== this.board.emptyValue
+                     || (top >= 2 && top <= 6 && left >= 9 && left <= 13);
+                attempts++;
+            } while (found && attempts < 100);
+            if (!found) {
+                this.matrix.matrix[top][left] = this.board.obstacleValue;
+                const el = document.createElement("DIV");
+                el.className = "obstacle";
+                el.style.top  = this.board.getPosition(top);
+                el.style.left = this.board.getPosition(left);
+                snakeContainer.appendChild(el);
+            }
+        }
     }
 
     /**

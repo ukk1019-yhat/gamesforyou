@@ -10,6 +10,7 @@ import Score        from "./Score.js";
 // Utils
 import Sounds       from "../../utils/Sounds.js";
 import Utils        from "../../utils/Utils.js";
+import Effects      from "../../utils/Effects.js";
 
 // Variables
 let display   = null;
@@ -23,6 +24,7 @@ let instance  = null;
 let starter   = null;
 let animation = null;
 let startTime = null;
+let effects   = null;
 
 
 
@@ -70,6 +72,7 @@ function finishGame() {
 function gameOver() {
     cancelAnimation();
     display.set("gameOver").show();
+    effects.screenShake(document.querySelector(".game"), 8, 300);
     scores.setInput();
     instance.destroyGame();
 }
@@ -150,7 +153,7 @@ function showHelp() {
     display.set("starting").setClass();
     score.set(level).show();
 
-    game = new Game(board, instance);
+    game = new Game(board, instance, null, level);
     instance.newGame(level);
     requestAnimation();
 }
@@ -194,13 +197,27 @@ function requestAnimation() {
             if (display.isStarting) {
                 nextCount();
             } else if (display.isPlaying) {
-                const res = game.snake.move();
+                    const res = game.snake.move();
                 if (res === "crashed") {
                     sounds.play("end");
+                    const headPx = gridToCanvasPos(game.snake.headPos.top, game.snake.headPos.left);
+                    effects.emitExplosion(headPx.x, headPx.y, "#ff4444");
                     gameOver();
                 } else if (res === "ate") {
                     sounds.play("eat");
-                    score.incScore(game.food.timer);
+                    const foodPos = game.food.pos;
+                    const px = gridToCanvasPos(foodPos.top, foodPos.left);
+                    if (game.food.isGolden) {
+                        effects.emitExplosion(px.x, px.y, "#FFD700");
+                        effects.emitSparkle(px.x, px.y, "#FFD700");
+                        score.incScore(game.food.timer + 50);
+                        score.showPopup("+50", foodPos.top, foodPos.left);
+                        game.snake.growExtra();
+                    } else {
+                        effects.emitExplosion(px.x, px.y, "#ff6b6b");
+                        score.incScore(game.food.timer);
+                        score.showPopup("+" + game.food.timer, foodPos.top, foodPos.left);
+                    }
                     instance.saveScore(score.score);
                     game.addFood();
                 }
@@ -210,6 +227,8 @@ function requestAnimation() {
         if (display.isPlaying) {
             game.food.reduceTime(time);
             score.showFoodTimer(game.food.timer);
+            const headPx = gridToCanvasPos(game.snake.headPos.top, game.snake.headPos.left);
+            effects.emitTrail(headPx.x, headPx.y, "#66bb6a");
         }
 
         if (display.isDemoing || display.isStarting || display.isPlaying) {
@@ -360,8 +379,20 @@ function main() {
     instance = new Instance(board);
     sounds   = new Sounds("snake.sound");
     scores   = new HighScores();
+    effects  = new Effects(document.querySelector("#container"));
 
     new Keyboard(display, scores, getShortcuts());
+}
+
+function gridToCanvasPos(top, left) {
+    const cont     = document.querySelector("#container");
+    const fs       = parseFloat(getComputedStyle(cont).fontSize) || 15;
+    const offset   = 1.8 * fs;
+    const cellSize = 1.5 * fs;
+    return {
+        x : offset + (left - 1) * cellSize + cellSize / 2,
+        y : offset + (top  - 1) * cellSize + cellSize / 2
+    };
 }
 
 // Load the game

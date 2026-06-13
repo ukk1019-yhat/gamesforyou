@@ -40,6 +40,7 @@ export default class Snake {
             links.forEach((link) => {
                 this.addLink(this.board.createSnakeElement(), link.top, link.left);
             });
+            this.updateColors();
         }
     }
 
@@ -65,6 +66,7 @@ export default class Snake {
             this.moveLink(pos.top, pos.left);
         }
         this.newDir = false;
+        this.updateColors();
 
         return "";
     }
@@ -182,5 +184,36 @@ export default class Snake {
      */
     get direction() {
         return { top : this.dirTop, left : this.dirLeft };
+    }
+
+    get headPos() {
+        if (this.queue.isEmpty) return this.initialPos;
+        return { top : this.queue.last.top, left : this.queue.last.left };
+    }
+
+    growExtra() {
+        const tail = this.queue.first;
+        if (tail) {
+            this.newLink(tail.top, tail.left);
+        }
+    }
+
+    updateColors() {
+        const len = this.queue.size;
+        if (len === 0) return;
+        let idx = 0;
+        this.queue.iterate();
+        while (this.queue.hasNext()) {
+            const item = this.queue.item();
+            const progress = idx / len;
+            const hue = 120 - progress * 40;
+            const light = 30 + progress * 30;
+            const body = item.element.querySelector(".snakeBody");
+            if (body) {
+                body.style.background = `hsl(${hue}, 75%, ${light}%)`;
+            }
+            this.queue.next();
+            idx++;
+        }
     }
 }

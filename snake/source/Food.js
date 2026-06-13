@@ -23,6 +23,7 @@ export default class Food {
         this.left     = left || 0;
         this.foodTime = 1000;
         this.time     = this.foodTime;
+        this.isGolden = false;
 
         /** @type {HTMLElement} */
         this.element  = document.querySelector(".food");
@@ -60,12 +61,21 @@ export default class Food {
      * @param {{top: Number, left: Number}} pos
      * @returns {Void}
      */
-    add(pos) {
+    add(pos, isGolden) {
         this.time = this.foodTime;
         this.top  = pos.top;
         this.left = pos.left;
+        this.isGolden = isGolden || false;
 
+        this.element.classList.toggle("golden", this.isGolden);
         this.setPosition();
+        this.spawnAnimation();
+    }
+
+    spawnAnimation() {
+        this.element.classList.remove("spawning");
+        void this.element.offsetWidth;
+        this.element.classList.add("spawning");
     }
 
     /**

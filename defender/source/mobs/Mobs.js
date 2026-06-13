@@ -28,11 +28,12 @@ export default class Mobs {
      * @param {Sounds} sounds
      * @param {Number} gameLevel
      */
-    constructor(board, panel, score, sounds, gameLevel) {
+    constructor(board, panel, score, sounds, effects, gameLevel) {
         this.board      = board;
         this.panel      = panel;
         this.score      = score;
         this.sounds     = sounds;
+        this.effects    = effects;
         this.manager    = new Manager(this);
         this.create     = new Create(this);
         this.alerts     = new Alerts();

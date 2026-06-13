@@ -90,6 +90,9 @@ export default class Chain {
         const dist = Utils.dist(this.initialPos, pos);
         if (dist > 10) {
             this.isDragging = true;
+            for (const card of this.cards) {
+                card.element.classList.add("card-dragging");
+            }
         }
     }
 
@@ -98,6 +101,9 @@ export default class Chain {
      * @returns {Void}
      */
     drop() {
+        for (const card of this.cards) {
+            card.element.classList.remove("card-dragging");
+        }
         Utils.removeElement(this.element);
     }
 

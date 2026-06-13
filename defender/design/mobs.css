@@ -571,3 +571,20 @@
 .alert-yellow {
     color: rgb(255, 255, 0);
 }
+.alert-damage {
+    color: rgb(255, 80, 80);
+    font-size: 1rem;
+}
+
+.slowed .mob-body {
+    filter: hue-rotate(240deg) saturate(0.5);
+}
+
+.hit .mob-body {
+    animation: mobHitFlash 0.15s ease-out;
+}
+
+@keyframes mobHitFlash {
+    0%   { filter: brightness(2); }
+    100% { filter: brightness(1); }
+}

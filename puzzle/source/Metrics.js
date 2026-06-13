@@ -22,6 +22,10 @@ export default class Metrics {
     #timerElem;
     /** @type {HTMLElement} */
     #totalElem;
+    /** @type {?SVGCircleElement} */
+    #ringFill;
+    /** @type {?SVGTextElement} */
+    #ringText;
 
 
     /**
@@ -52,9 +56,10 @@ export default class Metrics {
         this.boardHeight  = this.scaleSize * this.rows;
         this.boardPadding = this.scaleSize * 8;
 
-        this.totalPieces  = this.cols * this.rows;
-        this.placedPieces = 0;
-        this.elapsedTime  = 0;
+        this.totalPieces   = this.cols * this.rows;
+        this.placedPieces  = 0;
+        this.elapsedTime   = 0;
+        this.autoSnapDist  = 15;
 
         this.#menuElem    = document.querySelector(".menu");
         this.#scoreElem   = document.querySelector(".score");
@@ -65,8 +70,23 @@ export default class Metrics {
 
         this.#menuElem.style.display  = "flex";
         this.#scoreElem.style.display = "flex";
-        this.#timerElem.innerHTML     = "00<span>:</span>00";
+        this.#timerElem.innerHTML     = "<span class=\"timer-value\">00<span>:</span>00</span>";
         this.#totalElem.innerHTML     = String(this.totalPieces);
+
+        // Build progress ring
+        const wrapper        = document.createElement("div");
+        wrapper.className    = "progress-ring-wrapper";
+        wrapper.innerHTML    = `
+            <svg class="progress-ring" width="40" height="40" viewBox="0 0 40 40">
+                <circle class="ring-bg" cx="20" cy="20" r="17" fill="none" stroke-width="3"/>
+                <circle class="ring-fill" cx="20" cy="20" r="17" fill="none" stroke-width="3" stroke-dasharray="106.8" stroke-dashoffset="106.8"/>
+                <text class="ring-text" x="20" y="20">0%</text>
+            </svg>
+        `;
+        this.#ringFill = wrapper.querySelector(".ring-fill");
+        this.#ringText = wrapper.querySelector(".ring-text");
+        this.#scoreElem.appendChild(wrapper);
+
         this.drawScore();
     }
 
@@ -132,7 +152,18 @@ export default class Metrics {
      */
     drawScore() {
         this.#placedElem.innerHTML  = String(this.placedPieces);
-        this.#percentElem.innerHTML = String(Math.floor(this.placedPieces * 100 / this.totalPieces));
+        const pct = Math.floor(this.placedPieces * 100 / this.totalPieces);
+        if (this.#ringFill) {
+            const circumference = 106.8;
+            const offset = circumference - (pct / 100) * circumference;
+            this.#ringFill.style.strokeDashoffset = offset;
+            this.#ringText.textContent = pct + "%";
+        }
+        if (pct > 90) {
+            this.#timerElem.classList.add("pulse");
+        } else {
+            this.#timerElem.classList.remove("pulse");
+        }
     }
 
 
@@ -162,7 +193,7 @@ export default class Metrics {
      */
     drawTime() {
         const parts = Utils.parseTime(this.elapsedTime);
-        this.#timerElem.innerHTML = parts.join("<span>:</span>");
+        this.#timerElem.innerHTML = `<span class="timer-value">${parts.join("<span>:</span>")}</span>`;
     }
 
 

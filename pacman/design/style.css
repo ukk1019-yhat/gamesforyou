@@ -64,7 +64,10 @@ a {
     margin-left: -16em;
     width: 30em;
     height: 35em;
-    box-shadow: inset 0 0 0 999px rgb(0, 0, 0);
+    box-shadow:
+        inset 0 0 0 999px rgb(0, 0, 0),
+        0 0 15px rgba(0, 51, 255, 0.15),
+        0 0 30px rgba(0, 51, 255, 0.08);
     border: 1em solid rgba(0, 0, 0, 0.4);
 }
 
@@ -79,6 +82,10 @@ a {
     position: absolute;
     top: 1em;
     left: 1em;
+}
+
+.board {
+    filter: drop-shadow(0 0 2px rgba(0, 51, 255, 0.2));
 }
 
 

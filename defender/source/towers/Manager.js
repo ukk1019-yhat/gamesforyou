@@ -153,6 +153,11 @@ export default class Manager {
     processUpgrade(tower) {
         tower.upgrade();
 
+        if (tower.element) {
+            tower.element.classList.add("upgrade-flash");
+            setTimeout(() => tower.element.classList.remove("upgrade-flash"), 600);
+        }
+
         if (tower.getActualRange(-1) !== tower.getActualRange()) {
             this.parent.ranges.remove(tower);
             tower.setLists(this.parent.ranges.add(tower));

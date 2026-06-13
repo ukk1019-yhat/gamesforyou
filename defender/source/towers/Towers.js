@@ -26,12 +26,13 @@ export default class Towers {
      * @param {Mobs}   mobs
      * @param {Sounds} sounds
      */
-    constructor(board, panel, score, mobs, sounds) {
+    constructor(board, panel, score, mobs, sounds, effects) {
         this.board      = board;
         this.panel      = panel;
         this.score      = score;
         this.mobs       = mobs;
         this.sounds     = sounds;
+        this.effects    = effects;
         this.builder    = new Builder(this);
         this.manager    = new Manager(this);
         this.ranges     = new Ranges(this);

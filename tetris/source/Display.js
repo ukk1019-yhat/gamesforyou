@@ -46,9 +46,14 @@ export default class Display {
      * Show the message
      */
     show() {
+        this.container.style.opacity = "0";
         this.container.className = this.current;
         this.header.innerHTML    = this.messages[this.current][0];
         this.paragraph.innerHTML = this.messages[this.current][1];
+        requestAnimationFrame(() => {
+            this.container.style.transition = "opacity 0.2s ease";
+            this.container.style.opacity = "1";
+        });
     }
 
     /**
@@ -56,6 +61,8 @@ export default class Display {
      */
     hide() {
         this.container.className = "playing";
+        this.container.style.transition = "none";
+        this.container.style.opacity = "1";
     }
 
 

@@ -18,6 +18,7 @@ export default class Board {
         this.foodValue     = -3;
         this.borderValue   = -1;
         this.emptyValue    = -2;
+        this.obstacleValue = -4;
     }
 
 

@@ -84,6 +84,69 @@ export default class Tableau {
     }
 
     /**
+     * Highlights all valid drop target columns for the picked Card/Chain
+     * @param {(Card|Chain)} picked
+     * @returns {Void}
+     */
+    showTargets(picked) {
+        if (!picked.isDragging) return;
+        for (const col of this.columns) {
+            if (col.index !== picked.column && col.canMove(picked.firstCard)) {
+                col.highlight();
+            }
+        }
+    }
+
+    /**
+     * Hides all column targets
+     * @returns {Void}
+     */
+    hideTargets() {
+        for (const col of this.columns) {
+            col.unhighlight();
+        }
+    }
+
+    /**
+     * Shows a ghost preview at the nearest valid drop column
+     * @param {(Card|Chain)} picked
+     * @returns {Void}
+     */
+    showPreview(picked) {
+        if (!picked.isDragging) return;
+
+        const colIndex = this.getDropColumn(picked);
+        if (colIndex === picked.column) {
+            this.hidePreview();
+            return;
+        }
+
+        const col = this.columns[colIndex];
+        if (this._previewCol === colIndex) return;
+        this.hidePreview();
+
+        const preview = document.createElement("div");
+        preview.className = "drag-preview";
+        col.container.appendChild(preview);
+        preview.style.top  = Utils.toPX(col.offset);
+
+        this._preview    = preview;
+        this._previewCol = colIndex;
+    }
+
+    /**
+     * Hides the drag preview
+     * @returns {Void}
+     */
+    hidePreview() {
+        if (this._preview) {
+            this._preview.remove();
+            this._preview    = null;
+            this._previewCol = -1;
+        }
+    }
+
+    /**
      * Returns the Column to drop the given Card or Chain
      * @param {(Card|Chain)} picked
      * @returns {Number}

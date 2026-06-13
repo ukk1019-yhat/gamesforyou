@@ -170,6 +170,7 @@ export default class Card {
             this.setPosition(0);
             this.translate(pos);
             this.isDragging = true;
+            this.element.classList.add("card-dragging");
         }
     }
 
@@ -179,6 +180,7 @@ export default class Card {
      */
     drop() {
         this.isDragging = false;
+        this.element.classList.remove("card-dragging");
     }
 
     /**

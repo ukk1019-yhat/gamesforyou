@@ -62,13 +62,14 @@
                         <b>X</b> or <b>Up Arrow</b><br />
                         <b>Z</b><br />
                         <b>Ctrl</b> or <b>Space</b><br />
+                        <b>C</b><br />
                         <b>P</b><br />
                         <b>M</b><br />
                         <b>Enter</b>
                     </div>
                     <div class="middle">
                         - <br /> - <br /> - <br /> - <br /> - <br />
-                        - <br /> - <br /> - <br /> -
+                        - <br /> - <br /> - <br /> - <br /> -
                     </div>
                     <div class="right">
                         Move left<br />
@@ -77,6 +78,7 @@
                         Rotate right<br />
                         Rotate left<br />
                         Hard drop<br />
+                        Hold piece<br />
                         Pause game<br />
                         Mute/Unmute<br />
                         Start playing
@@ -88,6 +90,12 @@
         </div>
 
         <div class="rightSide">
+            <div class="hold">
+                <div class="content">
+                    <div id="hold"><div class="empty">-</div></div>
+                </div>
+                <div class="title">hold</div>
+            </div>
             <div class="next">
                 <div class="content">
                     <div id="next"></div>
@@ -107,6 +115,8 @@
                 <div class="title">lines</div>
             </div>
 
+            <div class="combo-popup"></div>
+            <div class="score-popup"></div>
             <div class="audio" data-action="sound">
                 <div class="waves">
                     <div></div><div></div>

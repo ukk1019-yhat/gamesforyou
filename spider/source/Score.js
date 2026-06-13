@@ -195,4 +195,17 @@ export default class Score {
         const parts = Utils.parseTime(this.time);
         this.timerElem.innerHTML = parts.join("<span>:</span>");
     }
+
+    /**
+     * Blinks the moves counter red
+     * @returns {Void}
+     */
+    blinkMoves() {
+        this.movesElem.classList.remove("moves-blink");
+        this.movesElem.offsetWidth; // reflow
+        this.movesElem.classList.add("moves-blink");
+        setTimeout(() => {
+            this.movesElem.classList.remove("moves-blink");
+        }, 1600);
+    }
 }

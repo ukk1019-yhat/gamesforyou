@@ -584,3 +584,112 @@ a:hover {
         height: 0.7em;
         border-radius: 0.3em 0 0 0.3em;
     }
+
+/*
+ * Food Spawn Animation
+ */
+@keyframes foodSpawn {
+    0% { transform: scale(0); opacity: 0; }
+    50% { transform: scale(1.3); opacity: 1; }
+    70% { transform: scale(0.9); }
+    100% { transform: scale(1); }
+}
+.food.spawning {
+    animation: foodSpawn 0.4s ease-out forwards;
+}
+
+/*
+ * Golden Food
+ */
+.food.golden .foodBody div {
+    background-color: #FFD700;
+}
+.food.golden .foodShadow div {
+    background-color: #B8860B;
+}
+@keyframes goldenPulse {
+    0%, 100% { filter: drop-shadow(0 0 2px #FFD700); }
+    50% { filter: drop-shadow(0 0 8px #FFD700) drop-shadow(0 0 12px #FFA500); }
+}
+.food.golden .foodBody {
+    animation: goldenPulse 0.8s ease-in-out infinite;
+}
+
+/*
+ * Obstacles
+ */
+.obstacle {
+    position: absolute;
+    width: 1.5em;
+    height: 1.5em;
+    background-color: #5a4a3a;
+    border-radius: 0.25em;
+    box-shadow: inset 0 0 0.3em #3a2a1a, 0.1em 0.1em 0 #3a2a1a;
+    z-index: 1;
+}
+
+/*
+ * Score Popup
+ */
+@keyframes scorePopup {
+    0% { opacity: 1; transform: translateY(0) scale(1); }
+    100% { opacity: 0; transform: translateY(-3em) scale(1.4); }
+}
+.scorePopup {
+    position: absolute;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #FFD700;
+    text-shadow: 0 0 0.3em #000, 0 0 0.5em #000;
+    pointer-events: none;
+    z-index: 10;
+    animation: scorePopup 0.8s ease-out forwards;
+}
+
+/*
+ * Screen Transitions
+ */
+#container {
+    transition: transform 0.25s ease-out, opacity 0.25s ease-out;
+}
+.starting #container,
+.continuing #container {
+    animation: screenZoomIn 0.3s ease-out;
+}
+@keyframes screenZoomIn {
+    0% { transform: scale(0.95); opacity: 0.5; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/*
+ * Grid Background Pulse (while playing)
+ */
+#container::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    background: rgba(255, 255, 255, 0.06);
+    transition: opacity 2s ease;
+}
+@keyframes gridPulseOverlay {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 1; }
+}
+.playing #container::after,
+.demo #container::after {
+    animation: gridPulseOverlay 4s ease-in-out infinite;
+}
+
+/*
+ * Game Over Pulse
+ */
+@keyframes gameOverPulse {
+    0%, 100% { box-shadow: 0 0 0 1em #272727, 0 0 0 1.2em #121212; }
+    50% { box-shadow: 0 0 0 1em #ff4444, 0 0 0 1.2em #cc0000; }
+}
+.gameOver #container {
+    animation: gameOverPulse 0.8s ease-in-out infinite;
+}

@@ -156,6 +156,14 @@ export default class Manager {
             this.parent.create.childs(mob);
         }
 
+        if (this.parent.effects) {
+            const pos = mob.centerPos;
+            this.parent.effects.emitExplosion(pos.left, pos.top, mob.color || "#ff4444");
+            if (gold > 0) {
+                this.parent.effects.emitSparkle(pos.left, pos.top, "#ffd700");
+            }
+        }
+
         this.parent.board.removeMob(mob.row, mob.col);
         this.parent.panel.destroyMob(mob);
         this.parent.waves.reduceMob(mob.wave);
@@ -164,6 +172,9 @@ export default class Manager {
 
         if (this.parent.waves.isLastWave() && this.isEmpty) {
             this.parent.score.gameOver();
+            if (this.parent.effects) {
+                this.parent.effects.emitCelebration(400, 300);
+            }
         }
     }
 

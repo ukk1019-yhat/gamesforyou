@@ -348,7 +348,7 @@ export default class Set {
         this.startPos = { top : pos.top - this.top, left : pos.left - this.left };
         this.pos      = pos;
 
-        this.#element.classList.add("dragging");
+        this.#element.classList.add("dragging", "dragging-piece");
         this.translate();
     }
 
@@ -368,6 +368,6 @@ export default class Set {
      * @returns {Void}
      */
     drop() {
-        this.#element.classList.remove("dragging");
+        this.#element.classList.remove("dragging", "dragging-piece");
     }
 }

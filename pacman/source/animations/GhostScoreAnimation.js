@@ -31,20 +31,26 @@ export default class GhostScoreAnimation extends Animation {
      * @returns {Void}
      */
     animate() {
-        const size = Math.min(0.2 + Math.round(this.time * 100 / 500) / 100, 1);
+        const raw     = Math.min(0.2 + Math.round(this.time * 100 / 500) / 100, 1);
+        const size    = this.time < 400 ? raw * (1 + 0.3 * Math.sin(this.time * 0.04)) : raw;
+        const floatY  = -Math.min(this.time * 0.003, 0.8);
 
         this.canvas.clearSavedRects();
+        this.canvas.ctx.save();
+        this.canvas.ctx.shadowColor = "rgb(51, 255, 255)";
+        this.canvas.ctx.shadowBlur  = 10;
         this.canvas.drawText({
             size  : size,
             color : "rgb(51, 255, 255)",
             text  : this.text,
             pos   : {
                 x : this.pos.x + 0.5,
-                y : this.pos.y + 0.5,
+                y : this.pos.y + 0.5 + floatY,
             },
             align : null,
             alpha : null,
         });
+        this.canvas.ctx.restore();
 
         if (this.time > 200) {
             this.blocksGame = false;

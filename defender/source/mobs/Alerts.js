@@ -46,6 +46,16 @@ export default class Alerts {
 
 
     /**
+     * Adds a damage number alert
+     * @param {Mob}    mob
+     * @param {Number} dmg
+     * @returns {Void}
+     */
+    damage(mob, dmg) {
+        this.add(mob, "alert-damage", String(dmg));
+    }
+
+    /**
      * Used to add any type of alert to thealert list
      * @param {Mob}    mob
      * @param {String} className

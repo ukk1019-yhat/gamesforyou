@@ -179,9 +179,11 @@ export default class Score {
         const height = this.scoreHeight * this.board.tileSize;
 
         this.ctx.save();
-        this.ctx.fillStyle = this.scoreColor;
-        this.ctx.textAlign = "left";
-        this.ctx.font      = `1.8em "Whimsy TT"`;
+        this.ctx.shadowColor = "rgba(255, 255, 51, 0.4)";
+        this.ctx.shadowBlur  = 6;
+        this.ctx.fillStyle   = this.scoreColor;
+        this.ctx.textAlign   = "left";
+        this.ctx.font        = `1.8em "Whimsy TT"`;
         this.ctx.clearRect(left + margin / 2, top - height / 2 - 2, width, height + 2);
         this.ctx.fillText(String(this.score), left + margin, top);
         this.ctx.restore();

@@ -3,6 +3,7 @@ import Game         from "./Game.js";
 import Instance     from "./Instance.js";
 
 // Utils
+import Effects      from "../../utils/Effects.js";
 import KeyCode      from "../../utils/KeyCode.js";
 import Sounds       from "../../utils/Sounds.js";
 import Utils        from "../../utils/Utils.js";
@@ -12,6 +13,7 @@ let game       = null;
 let instance   = null;
 let display    = null;
 let sounds     = null;
+let effects    = null;
 let actions    = null;
 let shortcuts  = null;
 let picked     = null;
@@ -29,7 +31,7 @@ function play(suits) {
     display.showGame();
 
     if (!games[suits]) {
-        games[suits] = new Game(instance, display, sounds, suits);
+        games[suits] = new Game(instance, display, sounds, effects, suits);
     }
     game = games[suits];
     if (instance.hasGame) {
@@ -153,6 +155,10 @@ function initDomListeners() {
             window.requestAnimationFrame(() => {
                 if (picked) {
                     picked.drag(e);
+                    if (game) {
+                        game.tableau.showTargets(picked);
+                        game.tableau.showPreview(picked);
+                    }
                 }
                 needForRAF = true;
             });
@@ -162,6 +168,10 @@ function initDomListeners() {
 
     document.addEventListener("mouseup", (e) => {
         if (picked) {
+            if (game) {
+                game.tableau.hideTargets();
+                game.tableau.hidePreview();
+            }
             if (picked.isDragging) {
                 game.drop(picked);
             } else {
@@ -193,6 +203,7 @@ function main() {
     instance = new Instance();
     display  = new Display();
     sounds   = new Sounds("spider.sound");
+    effects  = new Effects(document.querySelector(".container"));
 
     createActionsShortcuts();
     initDomListeners();

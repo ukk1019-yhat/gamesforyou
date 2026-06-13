@@ -78,8 +78,31 @@ export default class Tetrimino {
         this.ghostElem.className = "rot0";
         this.ghostElem.innerHTML = this.nextElem.innerHTML;
 
+        this.pieceElem.style.transition = "none";
         this.setDropPosition();
+        // Enable smooth movement after initial positioning
+        requestAnimationFrame(() => {
+            this.pieceElem.style.transition = "top 0.06s linear, left 0.06s linear";
+        });
+
+        // Ghost gradient opacity based on distance
+        this.updateGhostGradient();
+
         return this;
+    }
+
+    /**
+     * Updates ghost piece cells with gradient opacity based on distance from piece
+     */
+    updateGhostGradient() {
+        const ghostDivs = this.ghostElem.querySelectorAll("div");
+        const dist = this.hard - this.top;
+        ghostDivs.forEach((div) => {
+            const t = Number(div.dataset.top);
+            const cellDist = this.hard - (this.top + t);
+            const opacity = 0.15 + 0.45 * (1 - cellDist / Math.max(dist, 1));
+            div.style.opacity = String(Math.min(Math.max(opacity, 0.15), 0.6));
+        });
     }
 
     /**
@@ -178,6 +201,7 @@ export default class Tetrimino {
 
             this.rotation = rotation;
             this.setHardDrop();
+            this.updateGhostGradient();
             return true;
         }
         return false;
@@ -192,6 +216,7 @@ export default class Tetrimino {
         this.pieceElem.style.left = this.board.getLeft(this.left);
         this.ghostElem.style.top  = this.board.getTop(this.hard);
         this.ghostElem.style.left = this.board.getLeft(this.left);
+        this.updateGhostGradient();
     }
 
     /**

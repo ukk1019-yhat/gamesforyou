@@ -10,6 +10,7 @@ import Towers       from "./towers/Towers.js";
 import KeyCode      from "../../utils/KeyCode.js";
 import Sounds       from "../../utils/Sounds.js";
 import Utils        from "../../utils/Utils.js";
+import Effects      from "../../utils/Effects.js";
 
 // Variables
 let display   = null;
@@ -20,6 +21,7 @@ let panel     = null;
 let towers    = null;
 let mobs      = null;
 let sounds    = null;
+let effects   = null;
 let audio     = null;
 let animation = null;
 let startTime = null;
@@ -44,6 +46,7 @@ function requestAnimation() {
 
         towers.animate(time, speed);
         mobs.animate(time, speed, dec);
+        effects.update();
 
         if (display.isPlaying) {
             requestAnimation();
@@ -69,6 +72,7 @@ function destroyGame() {
     cancelAnimation();
     board.destroy();
     towers.destroy();
+    effects.clear();
 }
 
 /**
@@ -98,8 +102,9 @@ function newGame(level) {
     score  = new Score(gameLevel, showGameOver);
     board  = new Board(gameMap);
     panel  = new Panel();
-    mobs   = new Mobs(board, panel, score, sounds, gameLevel);
-    towers = new Towers(board, panel, score, mobs, sounds);
+    effects = new Effects(document.querySelector(".players"));
+    mobs   = new Mobs(board, panel, score, sounds, effects, gameLevel);
+    towers = new Towers(board, panel, score, mobs, sounds, effects);
 }
 
 /**

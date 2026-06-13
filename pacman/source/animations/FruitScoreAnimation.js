@@ -40,14 +40,17 @@ export default class FruitScoreAnimation extends Animation {
             color = Utils.rgba(255, 184, 255, alpha);
         }
 
+        const shimmer = Math.sin(this.time * 0.01) * 0.3 + 0.7;
+        const floatY  = -Math.min(this.time * 0.001, 0.3);
+
         this.canvas.clear();
         this.canvas.drawText({
-            size  : 1,
+            size  : 1 + (1 - shimmer) * 0.2,
             color : color,
             text  : this.text,
             pos   : {
                 x : this.pos.x + 0.5,
-                y : this.pos.y + 0.5,
+                y : this.pos.y + 0.5 + floatY,
             },
             align : null,
             alpha : null,

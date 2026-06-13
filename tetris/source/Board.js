@@ -11,10 +11,12 @@ export default class Board {
      * Tetris Board constructor
      * @param {Number}   tetriminoSize
      * @param {Function} onWindEnd
+     * @param {Effects}  effects
      */
-    constructor(tetriminoSize, onWindEnd) {
+    constructor(tetriminoSize, onWindEnd, effects) {
         this.fieldElem = document.querySelector(".field");
         this.winkElem  = document.querySelector(".winker");
+        this.effects   = effects;
 
         this.tetriminoSize = tetriminoSize;
         this.onWindEnd     = onWindEnd;
@@ -153,13 +155,33 @@ export default class Board {
      * @param {Number[]} lines
      */
     startWink(lines) {
-        lines.forEach((line) => {
+        const fieldRect = this.fieldElem.getBoundingClientRect();
+        const pieceSize = fieldRect.width / (this.matrixCols - 2);
+
+        lines.forEach((line, idx) => {
             if (this.lines[line]) {
                 this.lines[line].classList.add("wink");
             } else {
                 this.lines[line] = this.createWink(line);
             }
+            // Particles along the cleared row
+            const rowTop = fieldRect.top + (line - 2) * pieceSize + pieceSize / 2;
+            for (let x = 0; x < fieldRect.width; x += pieceSize * 1.5) {
+                this.effects.emit(
+                    fieldRect.left + x,
+                    rowTop,
+                    2, ["#fff", "#ffd43b", "#51cf66", "#4dabf7"][idx % 4],
+                    { speed: 3, life: 25, size: 3, spread: Math.PI, gravity: 0.05 }
+                );
+            }
         });
+
+        // Tetris (4 lines) - bigger celebration
+        if (lines.length >= 4) {
+            this.effects.emitCelebration(fieldRect);
+            this.effects.screenShake(document.querySelector("#container"), 8, 350);
+        }
+
         this.winks = lines;
     }
 
